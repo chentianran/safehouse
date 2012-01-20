@@ -1,0 +1,16 @@
+CLI Files:
+
+polynomialSystems.db #the sqlite3 database
+polySysDb.rb         #library for accessing the database
+admin.rb             #class for administrating the database. Query only works with name
+destroy.rb
+initialize.rb
+
+Web Files:
+
+./views/default.haml #haml file for the web page
+sinatraTest.rb       #backend code
+
+To run the website:
+ruby -rubygems sinatraTest.rb
+navigate to localhost:4567/hamltest 

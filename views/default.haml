@@ -1,0 +1,27 @@
+!!!
+%html{ :xmlns => "http://www.w3.org/1999/xhtml", :lang => "en", "xml:lang" => "en" }
+   %head
+      %title Professor Salary
+      %meta{ "http-equiv" => "Content-Type", :content => "text/html; charset=utf-8"}
+      %link{"rel" => "stylesheet", "href" => "main.css", "type" => "text/css" }
+   %body
+      #header
+         %h1 Professor Salary Reference
+      %form{:action=>"buttonpress", :method=>"get"}
+         %fieldset
+            %ol
+               %li
+                  %label{:for=>"name"} Name:
+                  %input{:name=>"name", :type=>"text"}
+               %li
+                  %label{:for=>"longName"} Long Name:
+                  %input{:name=>"longName", :type=>"text"}
+               %li
+                  %label{:for=>"tdeg"} tdeg:
+                  %input{:name=>"tdeg", :type=>"text"}
+               %li
+                  %label{:for=>"mvol"} mvol:
+                  %input{:name=>"mvol", :type=>"text"}
+            %input{:class=>"auto-style3", :type=>"submit", :value=>"Search" }
+      %form
+         .textarea{:name=>"TextArea1"}= "#{@text}"
