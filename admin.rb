@@ -1,45 +1,26 @@
 require 'rubygems'
-require 'thor'
 require 'polySysDb'
-
+require 'optparse'
+require 'ostruct'
 
 class PolySysCli
    
    def self.parse(args)
     options = OpenStruct.new
      options.name = ""
-     
-   desc "query", "query the database"
-   method_option :name, :aliases => "-n", :default => "", :desc => "query based on name"
-   method_option :longName, :aliases => "-l", :default => "", :desc => "query based on long name"
-   method_option :tdeg, :aliases => "-t", :default => "", :desc => "query based on tdeg"
-   method_option :mvol, :aliases => "-m", :default => "", :desc => "query based on mvol"
-   def query
-    db = PolySysDb.new()
-    results = db.queryName(options.name.strip)
-    results.each do |id, name, longName, tdeg, mvol|
-         print "#{id} #{name} #{longName} #{tdeg} #{mvol} \n"
-    end 
-   end
-   
-   desc "queryAll", "print everything in table"
-   def queryAll
-    db = PolySysDb.new()
-    db.printAll()
-  end
-
-
-   desc "add NAME LONGNAME TDEG MVOL", "add a polynomial system to the database"
-   def add(name, longName, tdeg, mvol)
-    db = PolySysDb.new()
-    db.add(name.strip, longName.strip,tdeg,mvol)
-   end
-
-   desc "remove ID", "remove a polynomial system based on id number"
-   def remove(id)
-    db = PolySysDb.new()
-    db.remove(id)
+    
+      opts = OptionParser.new do |opts|
+         opts.banner = "Usage: admin.rb add NAME LONGNAME TDEG MVOL\n" +    
+                       "       admin.rb delete ID\n" +
+                       "       admin.rb query [options]\n"  
+         opts.separator ""
+         opts.separator "Specific options:"
+         
+         opts.on("-n", "--name NAME", "Query by name") do |name|
+            options.name = name || ''
+         end
+      end
    end
 end
 
-PolySysCli.start
+options = PolySysCli.parse(ARGV)
