@@ -3,7 +3,7 @@ require 'thor'
 require 'polySysDb'
 
 
-class PolySysCli < Thor
+class PolySysCli
    
    def self.parse(args)
     options = OpenStruct.new
