@@ -13,7 +13,8 @@ class PolySysCli
     
       opts = OptionParser.new do |opts|
          opts.banner = "Usage: admin.rb add NAME LONGNAME TDEG MVOL\n" +    
-                       "       admin.rb delete ID\n" +
+                       "       admin.rb delete NAME\n" +
+                       "       admin.rb deleteid ID\n" +
                        "       admin.rb query [options]\n" + 
                        "       admin.rb set NAME FIELD=VALUE\n"
          opts.separator ""
