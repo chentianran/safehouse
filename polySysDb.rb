@@ -1,5 +1,4 @@
-require 'sqlite3'
-
+require 'sqlite3' 
 class PolySysDb
    :db
    def initialize()
@@ -39,7 +38,7 @@ class PolySysDb
       @db.commit()
    end
 
-   def remove(id)
+   def delete(id)
       @db.transaction()
       @db.execute("delete from polySys WHERE id=#{id}") 
       @db.commit()
@@ -54,6 +53,9 @@ class PolySysDb
       end
    end
 
+   def numSysFields 
+      return 4
+   end
 end
 
 
