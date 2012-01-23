@@ -37,13 +37,25 @@ class PolySysDb
       @db.execute("insert into polySys values(NULL, '#{name}', '#{longName}', #{tdeg}, #{mvol})") 
       @db.commit()
    end
+   
+   def set(name, field, value)
+       @db.transaction()
+       @db.execute("update polySys set #{field} = '#{value}' where Name = '#{name}'");
+       @db.commit()
+   end
 
-   def delete(id)
+   def deleteID(id)
       @db.transaction()
       @db.execute("delete from polySys WHERE id=#{id}") 
       @db.commit()
    end
    
+   def deleteName(name)
+      @db.transaction()
+      @db.execute("delete from polySys WHERE name=#{name}")
+      @db.commit()
+   end 
+
    def printAll()
       print "\nPolynomial Systems:\n"
       print "ID Name LongName tdeg mvol\n"
@@ -53,8 +65,8 @@ class PolySysDb
       end
    end
 
-   def numSysFields 
-      return 4
+   def fields 
+      return ["name", "longName", "tdeg", "mvol"]
    end
 end
 
