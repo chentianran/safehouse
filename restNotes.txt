@@ -1,0 +1,65 @@
+Use nouns, not verbs: create a query document and transfer for queries?
+ex: http://www.parts-depot.com/parts
+
+Characteristics:
+    * Client-Server: a pull-based interaction style: consuming components pull representations.
+    * Stateless
+    * Cache:responses must be capable of being labeled as cacheable or non-cacheable.
+    * Uniform interface: all resources are accessed with a generic interface (e.g., HTTP GET, POST, PUT, DELETE).
+    * Named resources - the system is comprised of resources which are named using a URL.
+    * Interconnected resource representations - the representations of the resources are interconnected using URLs, thereby enabling a client to progress from one state to another.
+    * Layered components - intermediaries, such as proxy servers, cache servers, gateways, etc, can be inserted between clients and resources to support performance, security, etc.
+
+
+Principles of REST Web Service Design
+1. The key to creating Web Services in a REST network (i.e., the Web) is to identify all of the conceptual entities that you wish to expose as services. Above we saw some examples of resources: parts list, detailed part data, purchase order.
+
+	polynomial system summary (long name, mvol, tdeg)
+	polynomial system representation
+	key point: query	
+
+2. Create a URL to each resource. The resources should be nouns, not verbs. For example, do not use this:
+        http://www.parts-depot.com/parts/getPart?id=00345
+    Note the verb, getPart. Instead, use a noun:
+        http://www.parts-depot.com/parts/00345
+
+
+
+3. Categorize your resources according to whether clients can just receive a representation of the resource, or whether clients can modify (add to) the resource. For the former, make those resources accessible using an 
+HTTP GET. For the later, make those resources accessible using HTTP POST, PUT, and/or DELETE.
+
+	Using GET for now, may use others if there is an admin interface involved
+
+4. All resources accessible via HTTP GET should be side-effect free. That is, the resource should just return a representation of the resource. Invoking the resource should not result in modifying the resource.
+
+	easy enough
+
+5. No man/woman is an island. Likewise, no representation should be an island. In other words, put hyperlinks within resource representations to enable clients to drill down for more information, and/or to obtain related information.
+6. Design to reveal data gradually. Don't reveal everything in a single response document. Provide hyperlinks to obtain more details.
+
+	every query result should have a link to the full system
+
+7. Specify the format of response data using a schema (DTD, W3C Schema, RelaxNG, or Schematron). For those services that require a POST or PUT to it, also provide a schema to specify the format of the response.
+
+	all of those are additional specifications on top of xml to constrain document structure. Does specifying haml documents on the server fit rest?
+	
+
+8. Describe how your services are to be invoked using either a WSDL document, or simply an HTML document. 
+
+	Start with HTML, get a basic idea of WSDL befor implementing
+	
+	
+Questions:
+    Is query object a resource? does being a resource imply it must be passed in a certain way, or is standard arg passing good enough? Should it be in xml?
+    
+    querying seems to be an elephant in the room for rest, most places just use query strings. 
+	
+	
+
+	
+
+sources:
+http://www.xfront.com/REST-Web-Services.html
+http://www.infoq.com/articles/designing-restful-http-apps-roth
+http://stackoverflow.com/questions/207477/restful-url-design-for-search
+http://www.opensearch.org/Specifications/OpenSearch/1.1#OpenSearch_URL_template_syntax
