@@ -3,7 +3,7 @@ require 'optparse'
 require 'ostruct'
 
 class PolySysCli
-   :subcommand 
+   :subcommand
    def self.parse(args)
 
      options = OpenStruct.new
@@ -12,17 +12,17 @@ class PolySysCli
      options.id = ""
     
       opts = OptionParser.new do |opts|
-         opts.banner = "Usage: admin.rb add NAME LONGNAME TDEG MVOL\n" +    
-                       "       admin.rb delete NAME\n" +
-                       "       admin.rb deleteid ID\n" +
-                       "       admin.rb query [options]\n" + 
-                       "       admin.rb set NAME FIELD=VALUE\n"
+         opts.banner = "Usage: admin.rb add NAME LONGNAME TDEG MVOL\n" +
+                       " admin.rb delete NAME\n" +
+                       " admin.rb deleteid ID\n" +
+                       " admin.rb query [options]\n" +
+                       " admin.rb set NAME FIELD=VALUE\n"
          opts.separator ""
          opts.separator "Specific options:"
          
          opts.on("-n", "--name NAME", "Select based on name") do |name|
             options.name = name || ''
-         end 
+         end
          opts.on("-i", "--id ID", "Select based on id") do |id|
             options.id = id
          end
@@ -64,7 +64,7 @@ when "query"
 when "delete"
    if options.name != ""
       db.deleteName(options.name)
-   elsif options.id  != ""
+   elsif options.id != ""
       db.deleteId(options.id)
    end
 when "set"
@@ -74,7 +74,7 @@ when "set"
       db.set(name, field, value)
    else
       print "Unknown field: ", field, "\n\n"
-      print "Valid fields: ", "\n" 
+      print "Valid fields: ", "\n"
       db.fields.each do |field|
         print field, "\n"
       end
