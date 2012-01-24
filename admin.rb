@@ -14,7 +14,6 @@ class PolySysCli
       opts = OptionParser.new do |opts|
          opts.banner = "Usage: admin.rb add NAME LONGNAME TDEG MVOL\n" +
                        " admin.rb delete NAME\n" +
-                       " admin.rb deleteid ID\n" +
                        " admin.rb query [options]\n" +
                        " admin.rb set NAME FIELD=VALUE\n"
          opts.separator ""
@@ -42,8 +41,7 @@ case ARGV[0]
 when "add"
    #check to be sure there are enough arguments to add
    #the ARGV.size - 1 is to account for the subcommand
-   #the db.fields.count - 1 is to account for ID not being specified
-   if ARGV.size - 1 != db.fields.count - 1
+   if ARGV.size - 1 != db.fields.count 
       print "Incorrect number of arguments to add\n"
       print "Usage: admin.rb add NAME LONGNAME TDEG MVOL\n"
    else
@@ -62,11 +60,8 @@ when "query"
       end
    end
 when "delete"
-   if options.name != ""
-      db.deleteName(options.name)
-   elsif options.id != ""
-      db.deleteId(options.id)
-   end
+   name = ARGV[1]
+   db.deleteName(name)
 when "set"
    name = ARGV[1]
    field,value = ARGV[2].split('=')

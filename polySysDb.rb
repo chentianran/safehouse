@@ -3,10 +3,11 @@ class PolySysDb
    :db
    def initialize()
       @db = SQLite3::Database.new( "polynomialSystems.db")
+      @db.results_as_hash = true
    end
 
    def buildNewTable()
-     @db.execute("CREATE TABLE polySys(Id integer PRIMARY KEY, Name text, LongName text, Tdeg integer, Mvol text)")
+     @db.execute("CREATE TABLE polySys(Name text PRIMARY KEY, LongName text, Tdeg integer, Mvol text)")
    end
 
    def dropTable() 
@@ -34,7 +35,7 @@ class PolySysDb
 
    def add(name, longName, tdeg, mvol)
       @db.transaction()
-      @db.execute("insert into polySys values(NULL, '#{name}', '#{longName}', #{tdeg}, #{mvol})") 
+      @db.execute("insert into polySys values('#{name}', '#{longName}', #{tdeg}, #{mvol})") 
       @db.commit()
    end
    
@@ -52,21 +53,26 @@ class PolySysDb
    
    def deleteName(name)
       @db.transaction()
-      @db.execute("delete from polySys WHERE name=#{name}")
+      @db.execute("delete from polySys WHERE name='#{name}'")
       @db.commit()
    end 
 
    def printAll()
       print "\nPolynomial Systems:\n"
-      print "ID Name LongName tdeg mvol\n"
+      print "Name LongName tdeg mvol\n"
       rows = queryAll()
-      rows.each do |id, name, longName, tdeg, mvol|
-         print "#{id} #{name} #{longName} #{tdeg} #{mvol} \n"
+      rows.each do |name, longName, tdeg, mvol|
+         print "#{name} #{longName} #{tdeg} #{mvol} \n"
       end
    end
 
-   def fields 
-      return ["name", "longName", "tdeg", "mvol"]
+#   def fields 
+#      return ["name", "longName", "tdeg", "mvol"]
+#   end
+
+   def fields
+       stmt = @db.prepare("select * from polySys")
+       return stmt.columns
    end
 end
 

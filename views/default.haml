@@ -7,7 +7,7 @@
    %body
       #header
          %h1 Systems of Equations Search
-      %form{:action=>"buttonpress", :method=>"get"}
+      %form{:action=>"system", :method=>"get"}
          %fieldset
             %ol
                %li
@@ -24,4 +24,4 @@
                   %input{:name=>"mvol", :type=>"text"}
             %input{:class=>"auto-style3", :type=>"submit", :value=>"Search" }
       %form
-         .textarea{:name=>"TextArea1"}= "#{@text}"
+         .textarea{:name=>"TextArea1"}= "#{@text[0][0]}"
