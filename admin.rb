@@ -12,7 +12,8 @@ class PolySysCli
      options.id = ""
     
       opts = OptionParser.new do |opts|
-         opts.banner = "Usage: admin.rb add NAME LONGNAME TDEG MVOL\n" +
+         opts.banner = "Usage:\n"  +
+                       " admin.rb add NAME LONGNAME TDEG MVOL\n" +
                        " admin.rb delete NAME\n" +
                        " admin.rb query [options]\n" +
                        " admin.rb set NAME FIELD=VALUE\n"
@@ -49,16 +50,22 @@ when "add"
    end
 when "query"
    if options.all
-      db.printAll()
-      print "\n"
+      rows = db.queryAll()
    elsif options.name != ""
       rows = db.queryName(options.name)
-      print "Systems\n"
-      print "ID Name LongName tdeg mvol\n"
-      rows.each do |row|
-         print row, "\n"
-      end
    end
+   print "Systems\n"
+   db.fields.each do |field|
+      print field, " "
+   end
+   print "\n"
+   rows.each do |row|
+      db.fields.each do |field|
+         print row[field], " "
+      end
+      print "\n"
+   end
+
 when "delete"
    name = ARGV[1]
    db.deleteName(name)
