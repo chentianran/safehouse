@@ -16,13 +16,9 @@ def formatRows(rows)
    return str
 end
 
-get '/' do
-  @text = ""
-  haml :default
-end
-
 get '/system' do
-   @text = db.queryAll()
-   haml :default
+  @tableColumns = db.fields
+  @systemData = db.queryAll()
+  haml :default
 end
 

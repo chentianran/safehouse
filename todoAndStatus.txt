@@ -1,0 +1,22 @@
+finished formating of query and delete
+admin.rb delete NAME
+TODO: add search functionality for fields besides name
+admin.rb query -n NAME --tdeg 5
+
+name column is unique, and is new primary key
+
+first priority: mostly done
+.../systems/ print everything
+list name, longName, desc., link
+
+TODO: create page for system/NAME
+TODO: create family pages .../family/chen/
+TODO: add functionality to get list of families
+
+TODO: add way to add field
+
+
+FUTURE: query is to be saved for later
+.../systems?name=jared?tdeg=5
+
+FUTURE: will it be query only for api? OPENSEARCH

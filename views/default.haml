@@ -6,22 +6,16 @@
       %link{"rel" => "stylesheet", "href" => "main.css", "type" => "text/css" }
    %body
       #header
-         %h1 Systems of Equations Search
-      %form{:action=>"system", :method=>"get"}
-         %fieldset
-            %ol
-               %li
-                  %label{:for=>"name"} Name:
-                  %input{:name=>"name", :type=>"text"}
-               %li
-                  %label{:for=>"longName"} Long Name:
-                  %input{:name=>"longName", :type=>"text"}
-               %li
-                  %label{:for=>"tdeg"} tdeg:
-                  %input{:name=>"tdeg", :type=>"text"}
-               %li
-                  %label{:for=>"mvol"} mvol:
-                  %input{:name=>"mvol", :type=>"text"}
-            %input{:class=>"auto-style3", :type=>"submit", :value=>"Search" }
-      %form
-         .textarea{:name=>"TextArea1"}= "#{@text[0][0]}"
+         %h1 Systems of Equations
+      %table
+         %tbody
+            %tr
+            - @tableColumns.each do |columnTitle|
+               %td= columnTitle 
+            %td More Info
+            - @systemData.each do |row|
+               %tr
+                  - @tableColumns.each do |column|
+                     %td= row[column]
+                  %td
+                     %a{:href=>"system/" + row["Name"]}info

@@ -7,7 +7,7 @@ class PolySysDb
    end
 
    def buildNewTable()
-     @db.execute("CREATE TABLE polySys(Name text PRIMARY KEY, LongName text, Tdeg integer, Mvol text)")
+     @db.execute("CREATE TABLE polySys(name text PRIMARY KEY, longname text, tdeg integer, mvol text)")
    end
 
    def dropTable() 
@@ -44,12 +44,6 @@ class PolySysDb
        @db.execute("update polySys set #{field} = '#{value}' where Name = '#{name}'");
        @db.commit()
    end
-
-   def deleteID(id)
-      @db.transaction()
-      @db.execute("delete from polySys WHERE id=#{id}") 
-      @db.commit()
-   end
    
    def deleteName(name)
       @db.transaction()
@@ -65,10 +59,6 @@ class PolySysDb
          print "#{name} #{longName} #{tdeg} #{mvol} \n"
       end
    end
-
-#   def fields 
-#      return ["name", "longName", "tdeg", "mvol"]
-#   end
 
    def fields
        stmt = @db.prepare("select * from polySys")
