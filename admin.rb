@@ -3,7 +3,18 @@ require 'optparse'
 require 'ostruct'
 
 class PolySysCli
-   :subcommand
+ 
+  :subcommand
+
+   def self.helpString() 
+       return "Usage:\n"  +
+       " admin.rb add NAME LONGNAME TDEG MVOL\n" +
+       " admin.rb delete NAME\n" +
+       " admin.rb query [options]\n" +
+       " admin.rb set NAME FIELD=VALUE\n" +
+       " admin.rb addcolumn NAME TYPE\n"
+   end
+
    def self.parse(args)
 
      options = OpenStruct.new
@@ -12,11 +23,7 @@ class PolySysCli
      options.id = ""
     
       opts = OptionParser.new do |opts|
-         opts.banner = "Usage:\n"  +
-                       " admin.rb add NAME LONGNAME TDEG MVOL\n" +
-                       " admin.rb delete NAME\n" +
-                       " admin.rb query [options]\n" +
-                       " admin.rb set NAME FIELD=VALUE\n"
+         opts.banner = PolySysCli.helpString()
          opts.separator ""
          opts.separator "Specific options:"
          
@@ -44,9 +51,9 @@ when "add"
    #the ARGV.size - 1 is to account for the subcommand
    if ARGV.size - 1 != db.fields.count 
       print "Incorrect number of arguments to add\n"
-      print "Usage: admin.rb add NAME LONGNAME TDEG MVOL\n"
+      print "Usage: admin.rb add #{db.fields.join(" ").upcase}\n"
    else
-      db.add(ARGV[1], ARGV[2], ARGV[3], ARGV[4]);
+      db.add(ARGV[1], ARGV[2..-1]);
    end
 when "query"
    if options.all
@@ -69,6 +76,12 @@ when "query"
 when "delete"
    name = ARGV[1]
    db.deleteName(name)
+
+when "addcolumn"
+   name = ARGV[1]
+   type = ARGV[2]
+   db.addColumn(name,type)
+
 when "set"
    name = ARGV[1]
    field,value = ARGV[2].split('=')
@@ -83,6 +96,7 @@ when "set"
    end
 else
    print "Unknown subcommand\n"
+   print PolySysCli.helpString()
 end
 
 

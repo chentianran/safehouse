@@ -1,17 +1,19 @@
 require 'sqlite3' 
 class PolySysDb
    :db
+   TABLE_NAME = "polySys" 
+   FILE_NAME = "polynomialSystems.db"
    def initialize()
-      @db = SQLite3::Database.new( "polynomialSystems.db")
+      @db = SQLite3::Database.new(FILE_NAME)
       @db.results_as_hash = true
    end
 
    def buildNewTable()
-     @db.execute("CREATE TABLE polySys(name text PRIMARY KEY, longname text, tdeg integer, mvol text)")
+     @db.execute("CREATE TABLE #{TABLE_NAME}(name text PRIMARY KEY, longname text, tdeg integer, mvol text)")
    end
 
    def dropTable() 
-     @db.execute("DROP TABLE polySys")
+     @db.execute("DROP TABLE #{TABLE_NAME}")
      rescue SQLite3::SQLException
        return false
      return true
@@ -20,7 +22,7 @@ class PolySysDb
    #db.execute("BEGIN TRANSACTION")
    def queryName(name)
 	@db.transaction()
-        rows = @db.execute("select * from polySys where Name = '#{name}'")
+        rows = @db.execute("select * from #{TABLE_NAME} where Name = '#{name}'")
 	@db.commit()
 	return rows
    end   
@@ -28,26 +30,38 @@ class PolySysDb
    #dangerous method  
    def queryAll()
 	@db.transaction()
-        rows = @db.execute("select * from polySys")
+        rows = @db.execute("select * from #{TABLE_NAME}")
 	@db.commit()
 	return rows
    end   
 
-   def add(name, longName, tdeg, mvol)
+#   def add(name, longName, tdeg, mvol)
+#      @db.transaction()
+#      @db.execute("insert into #{TABLE_NAME} values('#{name}', '#{longName}', #{tdeg}, #{mvol})") 
+#      @db.commit()
+#   end
+
+   def add(name, *args)
       @db.transaction()
-      @db.execute("insert into polySys values('#{name}', '#{longName}', #{tdeg}, #{mvol})") 
+      @db.execute("insert into #{TABLE_NAME} values('#{name}', '#{args.join("', '")}')") 
       @db.commit()
    end
    
    def set(name, field, value)
        @db.transaction()
-       @db.execute("update polySys set #{field} = '#{value}' where Name = '#{name}'");
+       @db.execute("update #{TABLE_NAME} set #{field} = '#{value}' where Name = '#{name}'");
        @db.commit()
    end
    
    def deleteName(name)
       @db.transaction()
-      @db.execute("delete from polySys WHERE name='#{name}'")
+      @db.execute("delete from #{TABLE_NAME} WHERE name='#{name}'")
+      @db.commit()
+   end 
+   
+   def addColumn(column, fieldtype)
+      @db.transaction()
+      @db.execute("alter table #{TABLE_NAME} add column #{column} #{fieldtype}")
       @db.commit()
    end 
 
@@ -61,7 +75,7 @@ class PolySysDb
    end
 
    def fields
-       stmt = @db.prepare("select * from polySys")
+       stmt = @db.prepare("select * from #{TABLE_NAME}")
        return stmt.columns
    end
 end

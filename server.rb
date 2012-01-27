@@ -5,20 +5,16 @@ require 'polySysDb'
 
 #initialize database
 db = PolySysDb.new()
-
-def formatRows(rows)
-      str = "" + 
-      "\nPolynomial Systems:<br>"+
-      "ID Name LongName tdeg mvol<br>"
-      rows.each do |id, name, longName, tdeg, mvol|
-         str += "#{id} #{name} #{longName} #{tdeg} #{mvol} #{name}<br>"
-      end
-   return str
-end
-
-get '/system' do
-  @tableColumns = db.fields
+tableColumns = db.fields
+get '/system/?' do
+  @tableColumns = tableColumns
   @systemData = db.queryAll()
   haml :default
+end
+
+get '/system/*' do |name|
+  @tableColumns = tableColumns
+  @systemDetails = db.queryName(name) 
+  haml :details
 end
 

@@ -1,4 +1,9 @@
 !!!
+- #edit these arrays to change the columns displayed. No ordered hash in 1.8, so 2 arrays work 
+- nameTitle = "Name"
+- nameField = "Name"
+- columnTitles = Array[ "Full Name", "Desc."] #what should be displayed 
+- columnFields = Array[ "LongName", "description" ] #what the columns are named in the sql database  
 %html{ :xmlns => "http://www.w3.org/1999/xhtml", :lang => "en", "xml:lang" => "en" }
    %head
       %title Systems of Equations
@@ -10,12 +15,13 @@
       %table
          %tbody
             %tr
-            - @tableColumns.each do |columnTitle|
+            %td= nameTitle
+            - columnTitles.each do |columnTitle|
                %td= columnTitle 
-            %td More Info
             - @systemData.each do |row|
                %tr
-                  - @tableColumns.each do |column|
-                     %td= row[column]
                   %td
-                     %a{:href=>"system/" + row["Name"]}info
+                     %a{:href=>"system/" + row[nameField]}= row[nameField]
+                  - columnFields.each do |field|
+                     %td= row[field]
+                 
