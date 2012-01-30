@@ -3,12 +3,15 @@
    %head
       %title Polynomial System Details
       %meta{ "http-equiv" => "Content-Type", :content => "text/html; charset=utf-8"}
-      %link{"rel" => "stylesheet", "href" => "main.css", "type" => "text/css" }
+      %link{"rel" => "stylesheet", "href" => "css/uniqueName.css", "type" => "text/css" }   
    %body
       #header
          %h1 Details
-      %table
+      %table.gridtable
          %tbody
+            %tr 
+               %th="Field" 
+               %th="Data"
             - @tableColumns.each do |field|
                %tr
                   %td= field
