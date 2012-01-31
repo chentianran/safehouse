@@ -58,7 +58,6 @@ class PolySysDb
       @db.execute("delete from #{TABLE_NAME} WHERE name='#{name}'")
       @db.commit()
    end 
-   
    def addColumn(column, fieldtype)
       @db.transaction()
       @db.execute("alter table #{TABLE_NAME} add column #{column} #{fieldtype}")
@@ -77,6 +76,10 @@ class PolySysDb
    def fields
        stmt = @db.prepare("select * from #{TABLE_NAME}")
        return stmt.columns
+   end
+   
+   def families
+       @db.execute("SELECT DISTINCT family FROM #{TABLE_NAME}")
    end
 end
 

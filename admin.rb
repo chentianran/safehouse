@@ -13,6 +13,7 @@ class PolySysCli
        " admin.rb query [options]\n" +
        " admin.rb set NAME FIELD=VALUE\n" +
        " admin.rb addcolumn NAME TYPE\n"
+       " admin.rb listfamilies\n"
    end
 
    def self.parse(args)
@@ -94,6 +95,10 @@ when "set"
         print field, "\n"
       end
    end
+
+when "listfamilies"
+    print db.families
+
 else
    print "Unknown subcommand\n"
    print PolySysCli.helpString()
