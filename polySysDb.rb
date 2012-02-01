@@ -1,66 +1,97 @@
 require 'sqlite3' 
 class PolySysDb
    :db
-   TABLE_NAME = "polySys" 
+   POLY_SYS_TABLE = "polySys" 
+   FAMILY_TABLE = "families"  
    FILE_NAME = "polynomialSystems.db"
+   
    def initialize()
       @db = SQLite3::Database.new(FILE_NAME)
       @db.results_as_hash = true
    end
 
    def buildNewTable()
-     @db.execute("CREATE TABLE #{TABLE_NAME}(name text PRIMARY KEY, longname text, tdeg integer, mvol text)")
+     @db.execute("CREATE TABLE #{POLY_SYS_TABLE}(name text PRIMARY KEY, longname text, family text, tdeg integer, mvol text, family_id text)")
+     @db.execute("CREATE TABLE #{FAMILY_TABLE}(id integer PRIMARY KEY AUTOINCREMENT, name text, desc text)")
    end
+  
 
-   def dropTable() 
-     @db.execute("DROP TABLE #{TABLE_NAME}")
+   def dropTable(table) 
+     @db.execute("DROP TABLE #{table}")
      rescue SQLite3::SQLException
        return false
      return true
    end
 
    #db.execute("BEGIN TRANSACTION")
-   def queryName(name)
+   def queryName(table, name)
 	@db.transaction()
-        rows = @db.execute("select * from #{TABLE_NAME} where Name = '#{name}'")
+        rows = @db.execute("select * from #{table} where name = '#{name}'")
 	@db.commit()
 	return rows
    end   
 
    #dangerous method  
-   def queryAll()
+   def queryAll(table)
 	@db.transaction()
-        rows = @db.execute("select * from #{TABLE_NAME}")
+        rows = @db.execute("select * from #{table}")
 	@db.commit()
 	return rows
    end   
-
-#   def add(name, longName, tdeg, mvol)
-#      @db.transaction()
-#      @db.execute("insert into #{TABLE_NAME} values('#{name}', '#{longName}', #{tdeg}, #{mvol})") 
-#      @db.commit()
-#   end
-
-   def add(name, *args)
+=begin
+   #change to pass in hash
+   #before doing name lookup
+   def add(table, name, *args)
       @db.transaction()
-      @db.execute("insert into #{TABLE_NAME} values('#{name}', '#{args.join("', '")}')") 
+      if table == POLY_SYS_TABLE
+         family = args[1]
+         @db.execute("insert into #{POLY_SYS_TABLE} values('#{name}', '#{args.join("', '")}')") 
+         existingFamily = @db.execute("SELECT * FROM #{FAMILY_TABLE} WHERE name = '#{family}'")  
+         if existingFamily.size == 0
+            @db.execute("INSERT INTO #{FAMILY_TABLE} VALUES(NULL, '#{family}', ' ')")  
+         else
+            @db.execute("update #{POLY_SYS_TABLE} set 'family_id' = '#{existingFamily["id"]}' where name = '#{name}'"); 
+         end
+      elsif table == FAMILY_TABLE
+         @db.execute("insert into #{FAMILY_TABLE} values(NULL, '#{name}', '#{args.join("', '")}')") 
+      end
       @db.commit()
    end
-   
-   def set(name, field, value)
+=end
+
+   #change to pass in hash
+   def add(table, name, *args)
+      @db.transaction()
+      if table == POLY_SYS_TABLE
+         family = args[1]
+         existingFamily = @db.execute("SELECT * FROM #{FAMILY_TABLE} WHERE name = '#{family}'")  
+         if existingFamily.size == 0
+            newFamily = @db.execute("INSERT INTO #{FAMILY_TABLE} VALUES(NULL, '#{family}', ' ')")  
+            @db.execute("insert into #{POLY_SYS_TABLE} values('#{name}', '#{args.join("', '")}')") 
+         else
+            @db.execute("update #{POLY_SYS_TABLE} set 'family_id' = '#{existingFamily["id"]}' where name = '#{name}'"); 
+         end
+      elsif table == FAMILY_TABLE
+         @db.execute("insert into #{FAMILY_TABLE} values(NULL, '#{name}', '#{args.join("', '")}')") 
+      end
+      @db.commit()
+   end
+
+   def set(table, name, field, value)
        @db.transaction()
-       @db.execute("update #{TABLE_NAME} set #{field} = '#{value}' where Name = '#{name}'");
+       @db.execute("update #{table} set #{field} = '#{value}' where name = '#{name}'")
        @db.commit()
    end
-   
-   def deleteName(name)
+  
+   def deleteName(table, name)
       @db.transaction()
-      @db.execute("delete from #{TABLE_NAME} WHERE name='#{name}'")
+      @db.execute("delete from #{table} WHERE name='#{name}'")
       @db.commit()
    end 
-   def addColumn(column, fieldtype)
+
+   def addColumn(table, column, fieldtype)
       @db.transaction()
-      @db.execute("alter table #{TABLE_NAME} add column #{column} #{fieldtype}")
+      @db.execute("alter table #{table} add column #{column} #{fieldtype}")
       @db.commit()
    end 
 
@@ -73,13 +104,9 @@ class PolySysDb
       end
    end
 
-   def fields
-       stmt = @db.prepare("select * from #{TABLE_NAME}")
+   def fields(table)
+       stmt = @db.prepare("select * from #{table}")
        return stmt.columns
-   end
-   
-   def families
-       @db.execute("SELECT DISTINCT family FROM #{TABLE_NAME}")
    end
 end
 

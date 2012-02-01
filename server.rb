@@ -5,16 +5,27 @@ require 'polySysDb'
 
 #initialize database
 db = PolySysDb.new()
-tableColumns = db.fields
-get '/system/?' do
-  @tableColumns = tableColumns
-  @systemData = db.queryAll()
-  haml :default
+get '/systems/?' do
+  @tableColumns = db.fields(PolySysDb::POLY_SYS_TABLE)
+  @systemData = db.queryAll(PolySysDb::POLY_SYS_TABLE)
+  haml :systems
 end
 
-get '/system/*' do |name|
-  @tableColumns = tableColumns
-  @systemDetails = db.queryName(name) 
+get '/systems/*' do |name|
+  @tableColumns = db.fields(PolySysDb::POLY_SYS_TABLE)
+  @systemDetails = db.queryName(PolySysDb::POLY_SYS_TABLE, name) 
+  haml :details
+end
+
+get '/families/?' do
+  @tableColumns = db.fields(PolySysDb::FAMILY_TABLE)
+  @systemData = db.queryAll(PolySysDb::FAMILY_TABLE)
+  haml :families
+end
+
+get '/families/*' do |name|
+  @tableColumns = db.fields(PolySysDb::FAMILY_TABLE)
+  @systemDetails = db.queryName(PolySysDb::FAMILY_TABLE, name) 
   haml :details
 end
 

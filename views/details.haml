@@ -3,10 +3,10 @@
    %head
       %title Polynomial System Details
       %meta{ "http-equiv" => "Content-Type", :content => "text/html; charset=utf-8"}
-      %link{"rel" => "stylesheet", "href" => "css/styles.css", "type" => "text/css" }   
+      %link{"rel" => "stylesheet", "href" => "/css/styles.css", "type" => "text/css" }   
    %body
       #header
-         %h1 Details
+         %h1=  @systemDetails[0]['name'].capitalize + " Details"
       %table.gridtable
          %tbody
             %tr 
@@ -14,6 +14,7 @@
                %th="Data"
             - @tableColumns.each do |field|
                %tr
-                  %td= field
-                  %td= @systemDetails[0][field]
+                  - if field != 'name'
+                     %td= field
+                     %td= @systemDetails[0][field]
             

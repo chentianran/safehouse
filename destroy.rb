@@ -6,5 +6,6 @@ ans.strip!
 ans.downcase!
 if ans == "y"
   db = PolySysDb.new() 
-  db.dropTable()
+  db.dropTable(PolySysDb::POLY_SYS_TABLE)
+  db.dropTable(PolySysDb::FAMILY_TABLE)
 end  
