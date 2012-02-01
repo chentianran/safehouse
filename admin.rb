@@ -61,13 +61,14 @@ case ARGV[0]
 when "add"
    #check to be sure there are enough arguments to add
    #the ARGV.size - 1 is to account for the subcommand
-   #db.fields(table).count - 1 is to account for id field
-   if table == PolySysDb::FAMILY_TABLE and ARGV.size - 1 != db.fields(table).count - 1 
+   fields = Array.new(db.fields(table))
+   fields.delete("id")
+   if table == PolySysDb::FAMILY_TABLE and ARGV.size - 1 != fields.count
       print "Incorrect number of arguments to add\n"
-      print "Usage: admin.rb add #{db.fields(table).join(" ").upcase}\n"
+      print "Usage: admin.rb add #{fields.join(" ").upcase}\n"
    elsif table == PolySysDb::POLY_SYS_TABLE and ARGV.size - 1 != db.fields(table).count 
       print "Incorrect number of arguments to add\n"
-      print "Usage: admin.rb add #{db.fields(table).join(" ").upcase}\n"
+      print "Usage: admin.rb add #{fields.join(" ").upcase}\n"
    else
       db.add(table, ARGV[1], ARGV[2..-1]);
    end

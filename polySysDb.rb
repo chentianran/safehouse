@@ -38,44 +38,17 @@ class PolySysDb
 	@db.commit()
 	return rows
    end   
-=begin
-   #change to pass in hash
-   #before doing name lookup
-   def add(table, name, *args)
-      @db.transaction()
-      if table == POLY_SYS_TABLE
-         family = args[1]
-         @db.execute("insert into #{POLY_SYS_TABLE} values('#{name}', '#{args.join("', '")}')") 
-         existingFamily = @db.execute("SELECT * FROM #{FAMILY_TABLE} WHERE name = '#{family}'")  
-         if existingFamily.size == 0
-            @db.execute("INSERT INTO #{FAMILY_TABLE} VALUES(NULL, '#{family}', ' ')")  
-         else
-            @db.execute("update #{POLY_SYS_TABLE} set 'family_id' = '#{existingFamily["id"]}' where name = '#{name}'"); 
-         end
-      elsif table == FAMILY_TABLE
-         @db.execute("insert into #{FAMILY_TABLE} values(NULL, '#{name}', '#{args.join("', '")}')") 
-      end
-      @db.commit()
-   end
-=end
 
-   #change to pass in hash
    def add(table, name, *args)
       @db.transaction()
       if table == POLY_SYS_TABLE
-         family = args[1]
-         existingFamily = @db.execute("SELECT * FROM #{FAMILY_TABLE} WHERE name = '#{family}'")  
-         if existingFamily.size == 0
-            newFamily = @db.execute("INSERT INTO #{FAMILY_TABLE} VALUES(NULL, '#{family}', ' ')")  
-            @db.execute("insert into #{POLY_SYS_TABLE} values('#{name}', '#{args.join("', '")}')") 
-         else
-            @db.execute("update #{POLY_SYS_TABLE} set 'family_id' = '#{existingFamily["id"]}' where name = '#{name}'"); 
-         end
+         @db.execute("insert into #{POLY_SYS_TABLE} values('#{name}', '#{args.join("', '")}')") 
       elsif table == FAMILY_TABLE
          @db.execute("insert into #{FAMILY_TABLE} values(NULL, '#{name}', '#{args.join("', '")}')") 
       end
       @db.commit()
    end
+
 
    def set(table, name, field, value)
        @db.transaction()
