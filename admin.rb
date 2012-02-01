@@ -13,6 +13,7 @@ class PolySysCli
        " admin.rb query [options]\n" +
        " admin.rb set NAME FIELD=VALUE\n" +
        " admin.rb addcolumn NAME TYPE\n"
+       " admin.rb listfamilies\n"
    end
 
    def self.parse(args)
@@ -34,9 +35,14 @@ class PolySysCli
             options.id = id
          end
 
-         opts.on("-a", "--all", "Select all") do |name|
+         opts.on("-a", "--all", "Select all") do 
             options.all = true
          end
+
+         opts.on("-f", "--family", "Operate on family") do 
+            options.family = true
+         end
+
       end
       opts.parse!(args)
       return options
@@ -45,29 +51,39 @@ end
 
 options = PolySysCli.parse(ARGV)
 db = PolySysDb.new()
+if options.family
+   table = PolySysDb::FAMILY_TABLE
+else
+   table =  PolySysDb::POLY_SYS_TABLE
+end
+
 case ARGV[0]
 when "add"
    #check to be sure there are enough arguments to add
    #the ARGV.size - 1 is to account for the subcommand
-   if ARGV.size - 1 != db.fields.count 
+   #db.fields(table).count - 1 is to account for id field
+   if table == PolySysDb::FAMILY_TABLE and ARGV.size - 1 != db.fields(table).count - 1 
       print "Incorrect number of arguments to add\n"
-      print "Usage: admin.rb add #{db.fields.join(" ").upcase}\n"
+      print "Usage: admin.rb add #{db.fields(table).join(" ").upcase}\n"
+   elsif table == PolySysDb::POLY_SYS_TABLE and ARGV.size - 1 != db.fields(table).count 
+      print "Incorrect number of arguments to add\n"
+      print "Usage: admin.rb add #{db.fields(table).join(" ").upcase}\n"
    else
-      db.add(ARGV[1], ARGV[2..-1]);
+      db.add(table, ARGV[1], ARGV[2..-1]);
    end
 when "query"
    if options.all
-      rows = db.queryAll()
+      rows = db.queryAll(table)
    elsif options.name != ""
-      rows = db.queryName(options.name)
+      rows = db.queryName(table, options.name)
    end
    print "Systems\n"
-   db.fields.each do |field|
+   db.fields(table).each do |field|
       print field, " "
    end
    print "\n"
    rows.each do |row|
-      db.fields.each do |field|
+      db.fields(table).each do |field|
          print row[field], " "
       end
       print "\n"
@@ -75,25 +91,26 @@ when "query"
 
 when "delete"
    name = ARGV[1]
-   db.deleteName(name)
+   db.deleteName(table, name)
 
 when "addcolumn"
    name = ARGV[1]
    type = ARGV[2]
-   db.addColumn(name,type)
+   db.addColumn(table, name,type)
 
 when "set"
    name = ARGV[1]
    field,value = ARGV[2].split('=')
-   if db.fields.include?(field.strip)
-      db.set(name, field, value)
+   if db.fields(table).include?(field.strip)
+      db.set(table, name, field, value)
    else
       print "Unknown field: ", field, "\n\n"
       print "Valid fields: ", "\n"
-      db.fields.each do |field|
-        print field, "\n"
+      db.fields(table).each do |field|
+         print field, "\n"
       end
    end
+
 else
    print "Unknown subcommand\n"
    print PolySysCli.helpString()
