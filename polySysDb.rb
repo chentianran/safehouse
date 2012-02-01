@@ -11,7 +11,7 @@ class PolySysDb
    end
 
    def buildNewTable()
-     @db.execute("CREATE TABLE #{POLY_SYS_TABLE}(name text PRIMARY KEY, longname text, family text, tdeg integer, mvol text, family_id text)")
+     @db.execute("CREATE TABLE #{POLY_SYS_TABLE}(name text PRIMARY KEY, longname text, tdeg integer, mvol text, family_id text)")
      @db.execute("CREATE TABLE #{FAMILY_TABLE}(id integer PRIMARY KEY AUTOINCREMENT, name text, desc text)")
    end
   
@@ -30,6 +30,14 @@ class PolySysDb
 	@db.commit()
 	return rows
    end   
+
+   def queryFamily(famID)
+	@db.transaction()
+        rows = @db.execute("select * from #{POLY_SYS_TABLE} where family_id = '#{famID}'")
+	@db.commit()
+	return rows
+   end   
+
 
    #dangerous method  
    def queryAll(table)

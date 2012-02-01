@@ -1,20 +1,13 @@
 !!!
 %html{ :xmlns => "http://www.w3.org/1999/xhtml", :lang => "en", "xml:lang" => "en" }
    %head
-      %title Polynomial System Details
+      %title Family Details
       %meta{ "http-equiv" => "Content-Type", :content => "text/html; charset=utf-8"}
       %link{"rel" => "stylesheet", "href" => "/css/styles.css", "type" => "text/css" }   
    %body
       #header
          %h1=  @systemDetails[0]['name'].capitalize + " Details"
-      %table.gridtable
-         %tbody
-            %tr 
-               %th="Field" 
-               %th="Data"
-            - @tableColumns.each do |field|
-               %tr
-                  - if field != 'name'
-                     %td= field
-                     %td= @systemDetails[0][field]
-            
+      %p.desc= @systemDetails[0]['desc']
+      %p= "Members: "             
+      - @systems.each do |system|
+         %a{:href=>"/systems/" + system["name"]}= system["name"]

@@ -1,0 +1,21 @@
+!!!
+%html{ :xmlns => "http://www.w3.org/1999/xhtml", :lang => "en", "xml:lang" => "en" }
+   %head
+      %title Polynomial System Details
+      %meta{ "http-equiv" => "Content-Type", :content => "text/html; charset=utf-8"}
+      %link{"rel" => "stylesheet", "href" => "/css/styles.css", "type" => "text/css" }   
+   %body
+      #header
+         %h1=  @systemDetails[0]['longname'].capitalize + " Details"
+      %table.detailstable
+         %tbody
+            %tr 
+               %th="Field" 
+               %th="Data"
+            - tableFields = [ 'tdeg', 'mvol']
+            - tableFields.each do |field|
+               %tr
+                  - if field != 'name'
+                     %td= field
+                     %td= @systemDetails[0][field]
+      %a= @systemDetails[0]["desc"]      

@@ -12,9 +12,14 @@ get '/systems/?' do
 end
 
 get '/systems/*' do |name|
-  @tableColumns = db.fields(PolySysDb::POLY_SYS_TABLE)
   @systemDetails = db.queryName(PolySysDb::POLY_SYS_TABLE, name) 
-  haml :details
+  if @systemDetails.count == 0
+     "Page Not Found"
+  else
+     @tableColumns = db.fields(PolySysDb::POLY_SYS_TABLE)
+     @familyName = db.queryFamily(@systemDetails[0]['family_id']
+     haml :systemDetails
+  end
 end
 
 get '/families/?' do
@@ -24,8 +29,14 @@ get '/families/?' do
 end
 
 get '/families/*' do |name|
-  @tableColumns = db.fields(PolySysDb::FAMILY_TABLE)
-  @systemDetails = db.queryName(PolySysDb::FAMILY_TABLE, name) 
-  haml :details
+  family = db.queryName(PolySysDb::FAMILY_TABLE, name)
+  if family.count == 0 
+     "Page Not Found"
+  else
+     @systems = db.queryFamily(family[0]["id"])
+     @tableColumns = db.fields(PolySysDb::FAMILY_TABLE)
+     @systemDetails = db.queryName(PolySysDb::FAMILY_TABLE, name) 
+     haml :familyDetails
+  end
 end
 

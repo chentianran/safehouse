@@ -89,6 +89,20 @@ when "query"
       end
       print "\n"
    end
+when "queryfamily"
+   rows = db.queryFamily(1)
+   print "Systems\n"
+   db.fields(table).each do |field|
+      print field, " "
+   end
+   print "\n"
+   rows.each do |row|
+      db.fields(table).each do |field|
+         print row[field], " "
+      end
+      print "\n"
+   end
+
 
 when "delete"
    name = ARGV[1]
