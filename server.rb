@@ -4,7 +4,7 @@ require 'haml'
 require 'polySysDb'
 
 #initialize database
-db = PolySysDb.new()
+db = PolySysDb.new("polySys.db")
 get '/systems/?' do
   @tableColumns = db.fields(PolySysDb::POLY_SYS_TABLE)
   @systemData = db.queryAll(PolySysDb::POLY_SYS_TABLE)
@@ -17,7 +17,6 @@ get '/systems/*' do |name|
      "Page Not Found"
   else
      @tableColumns = db.fields(PolySysDb::POLY_SYS_TABLE)
-     @familyName = db.queryFamily(@systemDetails[0]['family_id']
      haml :systemDetails
   end
 end
@@ -33,7 +32,7 @@ get '/families/*' do |name|
   if family.count == 0 
      "Page Not Found"
   else
-     @systems = db.queryFamily(family[0]["id"])
+     @systems = db.queryFamilyMembers(family[0]["id"])
      @tableColumns = db.fields(PolySysDb::FAMILY_TABLE)
      @systemDetails = db.queryName(PolySysDb::FAMILY_TABLE, name) 
      haml :familyDetails

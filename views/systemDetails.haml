@@ -12,7 +12,12 @@
             %tr 
                %th="Field" 
                %th="Data"
-            - tableFields = [ 'tdeg', 'mvol']
+            - tableFields = ['tdeg', 'mvol']
+            %tr 
+               %td
+                  %a{:href=>"/families/"} Family 
+               %td
+                  %a{:href=>"/families/"+@systemDetails[0]['familyname']}= @systemDetails[0]['familyname']
             - tableFields.each do |field|
                %tr
                   - if field != 'name'

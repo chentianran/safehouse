@@ -50,7 +50,7 @@ class PolySysCli
 end
 
 options = PolySysCli.parse(ARGV)
-db = PolySysDb.new()
+db = PolySysDb.new('polySys.db')
 if options.family
    table = PolySysDb::FAMILY_TABLE
 else

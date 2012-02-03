@@ -1,4 +1,5 @@
 require 'polySysDb'
 
-db = PolySysDb.new()
+db = PolySysDb.new('polySys.db')
 db.buildNewTable()
+
