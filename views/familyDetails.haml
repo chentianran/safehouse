@@ -11,4 +11,5 @@
       %p= "Members: "             
       %ul
       - @systems.each do |system|
-         %li{:href=>"/systems/" + system["name"]}= system["name"]
+         %li
+            %a{:href=>"/systems/" + system["name"]}= system["name"]
