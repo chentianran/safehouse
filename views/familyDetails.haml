@@ -9,5 +9,6 @@
          %h1=  @systemDetails[0]['name'].capitalize + " Details"
       %p.desc= @systemDetails[0]['desc']
       %p= "Members: "             
+      %ul
       - @systems.each do |system|
-         %a{:href=>"/systems/" + system["name"]}= system["name"]
+         %li{:href=>"/systems/" + system["name"]}= system["name"]

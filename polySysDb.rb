@@ -4,16 +4,17 @@ class PolySysDb
    POLY_SYS_TABLE = "polySys" 
    FAMILY_TABLE = "families"  
    
+   POLY_SYS_FIELDS =  "name text PRIMARY KEY, longname text, tdeg integer, mvol text, desc text, family_id text, eq_sym text, eq_lee text, ref text, soln_c integer, soln_r integer, posdim integer"
+   FAMILY_FIELDS = "id integer PRIMARY KEY AUTOINCREMENT, name text, desc text"
    def initialize(filename)
       @db = SQLite3::Database.new(filename)
       @db.results_as_hash = true
    end
 
    def buildNewTable()
-     @db.execute("CREATE TABLE #{POLY_SYS_TABLE}(name text PRIMARY KEY, longname text, tdeg integer, mvol text, family_id text)")
-     @db.execute("CREATE TABLE #{FAMILY_TABLE}(id integer PRIMARY KEY AUTOINCREMENT, name text, desc text)")
+     @db.execute("CREATE TABLE #{POLY_SYS_TABLE}(#{POLY_SYS_FIELDS})")
+     @db.execute("CREATE TABLE #{FAMILY_TABLE}(#{FAMILY_FIELDS})")
    end
-  
 
    def dropTable(table) 
      @db.execute("DROP TABLE #{table}")
@@ -101,7 +102,13 @@ SQL_STATEMENT
 	return rows
    end   
 
-   def add(table, name, *args)
+   def add(table, name)
+      @db.transaction()
+      @db.execute("insert into #{table} (name) values ('#{name}')") 
+      @db.commit()
+   end 
+
+   def addAndInit(table, name, *args)
       @db.transaction()
       if table == POLY_SYS_TABLE
          @db.execute("insert into #{POLY_SYS_TABLE} values('#{name}', '#{args.join("', '")}')") 
@@ -113,6 +120,15 @@ SQL_STATEMENT
 
 
    def set(table, name, field, value)
+       if field == 'familyname'
+          field = 'family_id'
+          family = queryNameFamily(value)
+          if family.count == 0
+             add(FAMILY_TABLE, value)
+             family = queryNameFamily(value)
+          end
+          value = family[0]['id']
+       end
        @db.transaction()
        @db.execute("update #{table} set #{field} = '#{value}' where name = '#{name}'")
        @db.commit()

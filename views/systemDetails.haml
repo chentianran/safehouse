@@ -4,23 +4,35 @@
       %title Polynomial System Details
       %meta{ "http-equiv" => "Content-Type", :content => "text/html; charset=utf-8"}
       %link{"rel" => "stylesheet", "href" => "/css/styles.css", "type" => "text/css" }   
+      %script{"src" => "/js/toggleDiv.js", "type"=>"text/javascript"}
    %body
       #header
-         %h1=  @systemDetails[0]['longname'].capitalize + " Details"
-      %table.detailstable
-         %tbody
-            %tr 
-               %th="Field" 
-               %th="Data"
-            - tableFields = ['tdeg', 'mvol']
-            %tr 
-               %td
-                  %a{:href=>"/families/"} Family 
-               %td
-                  %a{:href=>"/families/"+@systemDetails[0]['familyname']}= @systemDetails[0]['familyname']
-            - tableFields.each do |field|
-               %tr
-                  - if field != 'name'
-                     %td= field
-                     %td= @systemDetails[0][field]
-      %a= @systemDetails[0]["desc"]      
+         -if @systemDetails[0]['longname'] != nil
+            %h1=  @systemDetails[0]['longname'].capitalize + " Details"
+         -else 
+            %h1=  @systemDetails[0]['name'].capitalize + " Details"
+      %table
+         %tr
+            %td
+               %table.detailstable
+                  %tbody
+                     %tr 
+                        %th="Field" 
+                        %th="Data"
+                     - tableFields = ['tdeg', 'mvol']
+                     %tr 
+                        %td
+                           %a{:href=>url("/families/")} Family 
+                        %td
+                           %a{:href=>url("/families/"+@systemDetails[0]['familyname'])}= @systemDetails[0]['familyname']
+                     - tableFields.each do |field|
+                        %tr
+                           - if field != 'name'
+                              %td= field
+                              %td= @systemDetails[0][field]
+               %a= "<B>Family Description:</B> <BR> #{@systemDetails[0]["familydesc"]} <BR><BR><B>System Description:</B><BR> #{@systemDetails[0]["desc"]}"      
+         %tr
+            %td
+               %button{"onclick"=>"switchMenu('eq_sym')", "title"=>"Toggle paragraph"} Expand/Collapse
+               %div{:id=>"eq_sym"}
+                  %a= @systemDetails[0]["eq_sym"]

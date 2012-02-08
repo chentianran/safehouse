@@ -22,12 +22,18 @@ class PolySysCli
      options.name = ""
      options.all = false
      options.id = ""
+     options.database = "polySys.db"
     
       opts = OptionParser.new do |opts|
          opts.banner = PolySysCli.helpString()
          opts.separator ""
          opts.separator "Specific options:"
-         
+ 
+         opts.on("-d", "--database DATABASE_FILE
+", "Specify database file") do |database|
+            options.database = database
+         end
+        
          opts.on("-n", "--name NAME", "Select based on name") do |name|
             options.name = name || ''
          end
@@ -43,6 +49,7 @@ class PolySysCli
             options.family = true
          end
 
+
       end
       opts.parse!(args)
       return options
@@ -50,7 +57,7 @@ class PolySysCli
 end
 
 options = PolySysCli.parse(ARGV)
-db = PolySysDb.new('polySys.db')
+db = PolySysDb.new(options.database)
 if options.family
    table = PolySysDb::FAMILY_TABLE
 else
@@ -59,19 +66,7 @@ end
 
 case ARGV[0]
 when "add"
-   #check to be sure there are enough arguments to add
-   #the ARGV.size - 1 is to account for the subcommand
-   fields = Array.new(db.fields(table))
-   fields.delete("id")
-   if table == PolySysDb::FAMILY_TABLE and ARGV.size - 1 != fields.count
-      print "Incorrect number of arguments to add\n"
-      print "Usage: admin.rb add #{fields.join(" ").upcase}\n"
-   elsif table == PolySysDb::POLY_SYS_TABLE and ARGV.size - 1 != db.fields(table).count 
-      print "Incorrect number of arguments to add\n"
-      print "Usage: admin.rb add #{fields.join(" ").upcase}\n"
-   else
-      db.add(table, ARGV[1], ARGV[2..-1]);
-   end
+   db.add(table, ARGV[1])
 when "query"
    if options.all
       rows = db.queryAll(table)
@@ -116,7 +111,7 @@ when "addcolumn"
 when "set"
    name = ARGV[1]
    field,value = ARGV[2].split('=')
-   if db.fields(table).include?(field.strip)
+   if db.fields(table).include?(field.strip) or field == 'familyname'
       db.set(table, name, field, value)
    else
       print "Unknown field: ", field, "\n\n"
