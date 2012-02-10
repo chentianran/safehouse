@@ -4,6 +4,11 @@ require 'haml'
 require 'polySysDb'
 
 #initialize database
+databaseFile = "polysys.db"
+if ARGV.count > 0
+   databaseFile = ARGV[0]
+end
+
 db = PolySysDb.new("polySys.db")
 get '/systems/?' do
   @tableColumns = db.fields(PolySysDb::POLY_SYS_TABLE)

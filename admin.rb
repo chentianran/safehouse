@@ -22,7 +22,7 @@ class PolySysCli
      options.name = ""
      options.all = false
      options.id = ""
-     options.database = "polySys.db"
+     options.database = "polysys.db"
     
       opts = OptionParser.new do |opts|
          opts.banner = PolySysCli.helpString()
