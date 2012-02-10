@@ -7,9 +7,13 @@ require 'polySysDb'
 databaseFile = "polysys.db"
 if ARGV.count > 0
    databaseFile = ARGV[0]
+   print ARGV[0]
 end
 
-db = PolySysDb.new("polySys.db")
+db = PolySysDb.new(databaseFile.strip)
+get '/test' do
+   ARGV[0]
+end
 get '/systems/?' do
   @tableColumns = db.fields(PolySysDb::POLY_SYS_TABLE)
   @systemData = db.queryAll(PolySysDb::POLY_SYS_TABLE)

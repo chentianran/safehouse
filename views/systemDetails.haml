@@ -19,7 +19,7 @@
                      %tr 
                         %th="Field" 
                         %th="Data"
-                     - tableFields = ['tdeg', 'mvol']
+                     - tableFields = ['tdeg', 'mvol', 'posdim']
                      %tr 
                         %td
                            %a{:href=>url("/families/")} Family 
@@ -31,8 +31,15 @@
                               %td= field
                               %td= @systemDetails[0][field]
                %a= "<B>Family Description:</B> <BR> #{@systemDetails[0]["familydesc"]} <BR><BR><B>System Description:</B><BR> #{@systemDetails[0]["desc"]}"      
-         %tr
-            %td
-               %button{"onclick"=>"switchMenu('eq_sym')", "title"=>"Toggle paragraph"} Expand/Collapse
-               %div{:id=>"eq_sym"}
-                  %a= @systemDetails[0]["eq_sym"]
+         - boxFields = ['eq_sym', 'eq_lee', 'ref', 'soln_c', 'soln_r']
+         - boxFields.each do |field|
+            %tr
+               %td
+                  %div.collapsibleHeader
+                     %a= field
+                     %button.collapseButton{"onclick"=>"switchMenu('#{field}')", "title"=>"Toggle paragraph"} Expand/Collapse
+                  %div.collapsibleDiv{:id=>field}
+                     %a= @systemDetails[0][field]
+      -#initialize all boxes to be closed initially
+      - boxFields.each do |field|
+         %script= "switchMenu('#{field}')"

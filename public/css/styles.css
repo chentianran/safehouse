@@ -53,9 +53,16 @@ table.detailstable td {
 	background-color:white;
 }
 
-
-#eq_sym {
+button.collapseButton {
+   float : right;
+}
+div.collapsibleHeader {
+	border:1px solid #ccc;
+	background:#e2e2e2;
+}
+div.collapsibleDiv {
 	border:1px solid #ccc;
 	background:#f2f2f2;
 	padding:20px;
 }
+
