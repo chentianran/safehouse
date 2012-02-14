@@ -3,6 +3,13 @@ require 'sqlite3'
 require 'haml'
 require 'polySysDb'
 
+
+helpers do
+  def partial( page, variables={} )
+      haml page.to_sym, {layout=>false}, variables
+  end
+end
+
 #initialize database
 databaseFile = "polysys.db"
 if ARGV.count > 0
@@ -46,5 +53,11 @@ get '/families/*' do |name|
      @systemDetails = db.queryName(PolySysDb::FAMILY_TABLE, name) 
      haml :familyDetails
   end
+end
+
+get '/partial' do 
+   @tableColumns = db.fields(PolySysDb::FAMILY_TABLE)
+   @systemData = db.queryAll(PolySysDb::FAMILY_TABLE)
+   haml :testPartial1
 end
 
