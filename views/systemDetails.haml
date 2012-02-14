@@ -37,10 +37,9 @@
             - boxFields = ['eq_sym', 'eq_lee', 'ref']
             - boxFields.each do |field|
                %tr
-                  %td
+                  %td{"onclick"=>"switchMenu('#{field}')"}
                      %div.collapsibleHeader
                         %a= field
-                        %button.collapseButton{"onclick"=>"switchMenu('#{field}')", "title"=>"Toggle paragraph"} Expand/Collapse
                      %div.collapsibleDiv{:id=>field}
                         %a= @systemDetails[0][field]
          -#initialize all boxes to be closed initially
