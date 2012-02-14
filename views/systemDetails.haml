@@ -19,19 +19,20 @@
                      %tr 
                         %th="Field" 
                         %th="Data"
-                     - tableFields = ['tdeg', 'mvol', 'posdim']
+                     - tableFields = ['tdeg', 'mvol', 'posdim', 'soln_c', 'soln_r']
                      %tr 
                         %td
                            %a{:href=>url("/families/")} Family 
                         %td
-                           %a{:href=>url("/families/"+@systemDetails[0]['familyname'])}= @systemDetails[0]['familyname']
+                           -if @systemDetails[0]['familyname'] != nil
+                              %a{:href=>url("/families/"+@systemDetails[0]['familyname'])}= @systemDetails[0]['familyname']
                      - tableFields.each do |field|
                         %tr
                            - if field != 'name'
                               %td= field
                               %td= @systemDetails[0][field]
                %a= "<B>Family Description:</B> <BR> #{@systemDetails[0]["familydesc"]} <BR><BR><B>System Description:</B><BR> #{@systemDetails[0]["desc"]}"      
-         - boxFields = ['eq_sym', 'eq_lee', 'ref', 'soln_c', 'soln_r']
+         - boxFields = ['eq_sym', 'eq_lee', 'ref']
          - boxFields.each do |field|
             %tr
                %td
