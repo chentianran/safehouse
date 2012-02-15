@@ -8,11 +8,10 @@
       = partial "bar"
       %div{:id=>"main"}
          #header
-            %h1=  @systemDetails[0]['name'].capitalize + " Details"
-         %p.desc= @systemDetails[0]['desc']
+            %h1=  @pageTitle + " Details"
+         %p.desc= @desc
          %p= "Members: "             
          %ul
          - @systems.each do |system|
-            -if system["name"] != nil
-               %li
-                  %a{:href=>"/systems/" + system["name"]}= system["name"]
+            %li
+               %a{:href=>"/systems/" + system["name"]}= system["name"]

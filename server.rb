@@ -2,6 +2,7 @@ require 'sinatra'
 require 'sqlite3'
 require 'haml'
 require 'polySysDb'
+require 'resultParser'
 
 def replaceBools(fieldMap)
 
@@ -37,7 +38,6 @@ get '/test' do
    ARGV[0]
 end
 get '/systems/?' do
-  @tableColumns = db.fields(PolySysDb::POLY_SYS_TABLE)
   @systemData = db.queryAll(PolySysDb::POLY_SYS_TABLE)
   haml :systems
 end
@@ -47,8 +47,18 @@ get '/systems/*' do |name|
   if @systemDetails.count == 0
      "Page Not Found"
   else
-     @tableColumns = db.fields(PolySysDb::POLY_SYS_TABLE)
-     @fullRowValues =  replaceBools(@tableColumns[0])
+     rp = ResultParser.new(@systemDetails[0])
+     if @systemDetails[0]['longname'] == nil
+        @pageTitle = @systemDetails[0]['name'].capitalize
+     else
+        @pageTitle = @systemDetails[0]['longname'].capitalize
+     end
+     @desc = @systemDetails[0]['desc']
+     @familyDesc = @systemDetails[0]['familydesc']
+     @family = @systemDetails[0]['familyname']
+     @tableValues = rp.titleData(Array['tdeg','mvol','posdim','soln_c','soln_r'], Array['Tdeg', 'M vol', 'pos dim', 'Soln C', 'Soln r'])
+     @fullRowValues =  rp.replaceBools(Array["posdim"], Array["has posDim"])
+     @collapsibleBoxVals = rp.titleData(Array['eq_sym', 'eq_lee', 'ref'], Array['Eq Sym', 'Eq Lee', 'References'])
      haml :systemDetails
   end
 end
@@ -65,8 +75,9 @@ get '/families/*' do |name|
      "Page Not Found"
   else
      @systems = db.queryFamilyMembers(family[0]["id"])
-     @tableColumns = db.fields(PolySysDb::FAMILY_TABLE)
-     @systemDetails = db.queryName(PolySysDb::FAMILY_TABLE, name) 
+     familyDetails = db.queryName(PolySysDb::FAMILY_TABLE, name) 
+     @pageTitle = familyDetails[0]['name'].capitalize
+     @desc = familyDetails[0]['desc']
      haml :familyDetails
   end
 end
