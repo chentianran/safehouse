@@ -3,6 +3,21 @@ require 'sqlite3'
 require 'haml'
 require 'polySysDb'
 
+def replaceBools(fieldMap)
+
+   #Some fields are a boolean value, and will be replaced with strings
+   boolSubs = Array[Array["posdim", "Has positive dimensions"]] #,Array["open", "Is unsolved"]]
+
+   output = Array[]
+   boolSubs.each do |field, str|
+      if fieldMap[field] == 1
+         #delete field from map
+         output.push(str)  
+      end
+      fieldMap.delete(field)
+   end
+   return output
+end
 
 helpers do
   def partial( page, variables={} )
@@ -33,6 +48,7 @@ get '/systems/*' do |name|
      "Page Not Found"
   else
      @tableColumns = db.fields(PolySysDb::POLY_SYS_TABLE)
+     @fullRowValues =  replaceBools(@tableColumns[0])
      haml :systemDetails
   end
 end

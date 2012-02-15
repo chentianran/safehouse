@@ -10,18 +10,20 @@
       %meta{ "http-equiv" => "Content-Type", :content => "text/html; charset=utf-8"}
       %link{"rel" => "stylesheet", "href" => "/css/styles.css", "type" => "text/css" }
    %body
-      #header
-         %h1 Systems of Equations
-      %table.gridtable
-         %tr
-         %th= nameTitle
-         - columnTitles.each do |columnTitle|
-            %th= columnTitle 
-         %tbody
-            - @systemData.each do |row|
-               %tr
-                  %td
-                     %a{:href=>"/systems/" + row[nameField]}= row[nameField]
-                  - columnFields.each do |field|
-                     %td= row[field]
-                 
+      = partial "bar"
+      %div{:id=>"main"}
+         #header
+            %h1 Systems of Equations
+         %table.gridtable
+            %tr
+            %th= nameTitle
+            - columnTitles.each do |columnTitle|
+               %th= columnTitle 
+            %tbody
+               - @systemData.each do |row|
+                  %tr
+                     %td
+                        %a{:href=>"/systems/" + row[nameField]}= row[nameField]
+                     - columnFields.each do |field|
+                        %td= row[field]
+                    

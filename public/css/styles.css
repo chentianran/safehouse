@@ -59,6 +59,7 @@ button.collapseButton {
 div.collapsibleHeader {
 	border:1px solid #ccc;
 	background:#e2e2e2;
+   overflow:hidden;   
 }
 div.collapsibleDiv {
 	border:1px solid #ccc;
@@ -93,6 +94,10 @@ div.collapsibleDiv {
 }
 */
 #main{
-   float:right;
-   width:80%;
+   overflow:auto;
+}
+
+#collapsibleBoxSection
+{
+clear:both;
 }
