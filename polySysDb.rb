@@ -4,8 +4,27 @@ class PolySysDb
    POLY_SYS_TABLE = "polySys" 
    FAMILY_TABLE = "families"  
    
-   POLY_SYS_FIELDS =  "name text PRIMARY KEY, longname text, tdeg integer, mvol text, desc text, family_id text, eq_sym text, eq_lee text, ref text, soln_c integer, soln_r integer, posdim integer"
-   FAMILY_FIELDS = "id integer PRIMARY KEY AUTOINCREMENT, name text, desc text"
+   POLY_SYS_FIELDS =  <<-fieldStr
+                        name text PRIMARY KEY, 
+                        longname text, 
+                        tdeg integer, 
+                        mvol text, 
+                        desc text, 
+                        family_id text, 
+                        eq_sym text, 
+                        eq_lee text, 
+                        ref text, 
+                        soln_c integer, 
+                        soln_r integer, 
+                        posdim integer
+                      fieldStr
+
+   FAMILY_FIELDS = <<-fieldStr
+                     id integer PRIMARY KEY AUTOINCREMENT, 
+                     name text, 
+                     desc text
+                   fieldStr
+
    def initialize(filename)
       @db = SQLite3::Database.new(filename)
       @db.results_as_hash = true
@@ -32,44 +51,53 @@ class PolySysDb
   end
 
    def queryNameFamily(name)
-	@db.transaction()
+   @db.transaction()
         rows = @db.execute("SELECT * FROM #{FAMILY_TABLE} WHERE name = '#{name}'")
-	@db.commit()
-	return rows
+   @db.commit()
+   return rows
    end   
 
    #db.execute("BEGIN TRANSACTION")
    def queryNameSystem( name)
-	@db.transaction()
-        rows = @db.execute( <<SQL_STATEMENT)
-	SELECT #{POLY_SYS_TABLE}.* , #{FAMILY_TABLE}.name AS familyname, #{FAMILY_TABLE}.desc AS familydesc
-	FROM #{POLY_SYS_TABLE}
-	LEFT JOIN #{FAMILY_TABLE} 
-	ON  #{POLY_SYS_TABLE}.family_id=#{FAMILY_TABLE}.id
+   @db.transaction()
+        rows = @db.execute( <<-SQL_STATEMENT)
+   SELECT #{POLY_SYS_TABLE}.* , #{FAMILY_TABLE}.name AS familyname, #{FAMILY_TABLE}.desc AS familydesc
+   FROM #{POLY_SYS_TABLE}
+   LEFT JOIN #{FAMILY_TABLE} 
+   ON  #{POLY_SYS_TABLE}.family_id=#{FAMILY_TABLE}.id
         WHERE #{POLY_SYS_TABLE}.name = '#{name}'
 SQL_STATEMENT
-	@db.commit()
-	return rows
+   @db.commit()
+   return rows
    end   
 
    def queryFamilyMembers(famID)
-	@db.transaction()
-        rows = @db.execute( <<SQL_STATEMENT)
-	SELECT #{POLY_SYS_TABLE}.* , #{FAMILY_TABLE}.name AS familyname, #{FAMILY_TABLE}.desc AS familydesc
-	FROM #{POLY_SYS_TABLE}
-	LEFT JOIN #{FAMILY_TABLE} 
-	ON  #{POLY_SYS_TABLE}.family_id=#{FAMILY_TABLE}.id
-        WHERE #{POLY_SYS_TABLE}.family_id = '#{famID}'
-SQL_STATEMENT
-	@db.commit()
-	return rows
+      return querySystem("#{POLY_SYS_TABLE}.family_id = '#{famID}'")
    end   
 
+   #returns all systeme for which condition is true
+   def querySystem( condition )
+      @db.transaction()
+      #statement returns all of the columns in system, as well as the name and
+      # description of the table associated with it
+      rows = @db.execute( <<-SQL_STATEMENT)
+         SELECT #{POLY_SYS_TABLE}.* , 
+                #{FAMILY_TABLE}.name AS familyname, 
+                #{FAMILY_TABLE}.desc AS familydesc
+         FROM #{POLY_SYS_TABLE}
+         LEFT JOIN #{FAMILY_TABLE} 
+         ON  #{POLY_SYS_TABLE}.family_id=#{FAMILY_TABLE}.id
+              WHERE #{condition} 
+      SQL_STATEMENT
+      @db.commit()
+      return rows
+   end
+
    def queryFamily(famID)
-	@db.transaction()
+   @db.transaction()
         rows = @db.execute("select * from #{FAMILY_TABLE} where family_id = '#{famID}'")
-	@db.commit()
-	return rows
+   @db.commit()
+   return rows
    end   
 
   def queryAll(table)
@@ -81,25 +109,25 @@ SQL_STATEMENT
   end
 
    def queryAllFamily()
-	@db.transaction()
+   @db.transaction()
         rows = @db.execute("SELECT * FROM #{FAMILY_TABLE}")
-	@db.commit()
-	return rows
+   @db.commit()
+   return rows
    end   
 
 
    #dangerous method  
    def queryAllSystem()
-	@db.transaction()
-        rows = @db.execute( <<SQL_STATEMENT)
-	SELECT #{POLY_SYS_TABLE}.* , #{FAMILY_TABLE}.name AS familyname, #{FAMILY_TABLE}.desc AS familydesc
-	FROM #{POLY_SYS_TABLE}
-	LEFT JOIN #{FAMILY_TABLE} 
-	ON #{POLY_SYS_TABLE}.family_id=#{FAMILY_TABLE}.id
-SQL_STATEMENT
-	@db.commit()
+   @db.transaction()
+        rows = @db.execute( <<-SQL_STATEMENT)
+   SELECT #{POLY_SYS_TABLE}.* , #{FAMILY_TABLE}.name AS familyname, #{FAMILY_TABLE}.desc AS familydesc
+   FROM #{POLY_SYS_TABLE}
+   LEFT JOIN #{FAMILY_TABLE} 
+   ON #{POLY_SYS_TABLE}.family_id=#{FAMILY_TABLE}.id
+   SQL_STATEMENT
+   @db.commit()
 
-	return rows
+   return rows
    end   
 
    def add(table, name)
