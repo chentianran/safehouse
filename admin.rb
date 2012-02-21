@@ -1,8 +1,8 @@
-require 'polySysDb'
+require 'systemsDb'
 require 'optparse'
 require 'ostruct'
 
-class PolySysCli
+class SystemsCli
  
   :subcommand
 
@@ -22,10 +22,10 @@ class PolySysCli
      options.name = ""
      options.all = false
      options.id = ""
-     options.database = "polysys.db"
+     options.database = "systems.db"
     
       opts = OptionParser.new do |opts|
-         opts.banner = PolySysCli.helpString()
+         opts.banner = SystemsCli.helpString()
          opts.separator ""
          opts.separator "Specific options:"
  
@@ -56,12 +56,12 @@ class PolySysCli
    end
 end
 
-options = PolySysCli.parse(ARGV)
-db = PolySysDb.new(options.database)
+options = SystemsCli.parse(ARGV)
+db = SystemsDb.new(options.database)
 if options.family
-   table = PolySysDb::FAMILY_TABLE
+   table = SystemsDb::FAMILY_TABLE
 else
-   table =  PolySysDb::POLY_SYS_TABLE
+   table =  SystemsDb::SYSTEMS_TABLE
 end
 
 case ARGV[0]
@@ -123,7 +123,7 @@ when "set"
 
 else
    print "Unknown subcommand\n"
-   print PolySysCli.helpString()
+   print SystemsCli.helpString()
 end
 
 

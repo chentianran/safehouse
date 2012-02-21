@@ -1,10 +1,11 @@
 require 'sqlite3' 
-class PolySysDb
+
+class SystemsDb
    :db
-   POLY_SYS_TABLE = "polySys" 
+   SYSTEMS_TABLE = "systems" 
    FAMILY_TABLE = "families"  
    
-   POLY_SYS_FIELDS =  <<-fieldStr
+   SYSTEMS_FIELDS =  <<-fieldStr
                         name text PRIMARY KEY, 
                         longname text, 
                         tdeg integer, 
@@ -25,13 +26,13 @@ class PolySysDb
                      desc text
                    fieldStr
 
-   def initialize(filename)
+  def initialize(filename)
       @db = SQLite3::Database.new(filename)
       @db.results_as_hash = true
    end
 
    def buildNewTable()
-     @db.execute("CREATE TABLE #{POLY_SYS_TABLE}(#{POLY_SYS_FIELDS})")
+     @db.execute("CREATE TABLE #{SYSTEMS_TABLE}(#{SYSTEMS_FIELDS})")
      @db.execute("CREATE TABLE #{FAMILY_TABLE}(#{FAMILY_FIELDS})")
    end
 
@@ -43,7 +44,7 @@ class PolySysDb
    end
 
   def queryName(table, name)
-     if(table == POLY_SYS_TABLE)
+     if(table == SYSTEMS_TABLE)
         queryNameSystem(name)
      else
         queryNameFamily(name)
@@ -59,20 +60,30 @@ class PolySysDb
 
    #db.execute("BEGIN TRANSACTION")
    def queryNameSystem( name)
+<<<<<<< HEAD:polySysDb.rb
    @db.transaction()
         rows = @db.execute( <<-SQL_STATEMENT)
-   SELECT #{POLY_SYS_TABLE}.* , #{FAMILY_TABLE}.name AS familyname, #{FAMILY_TABLE}.desc AS familydesc
-   FROM #{POLY_SYS_TABLE}
+   SELECT #{SYSTEMS_TABLE}.* , #{FAMILY_TABLE}.name AS familyname, #{FAMILY_TABLE}.desc AS familydesc
+   FROM #{SYSTEMS_TABLE}
    LEFT JOIN #{FAMILY_TABLE} 
-   ON  #{POLY_SYS_TABLE}.family_id=#{FAMILY_TABLE}.id
-        WHERE #{POLY_SYS_TABLE}.name = '#{name}'
+   ON  #{SYSTEMS_TABLE}.family_id=#{FAMILY_TABLE}.id
+        WHERE #{SYSTEMS_TABLE}.name = '#{name}'
+=======
+	@db.transaction()
+        rows = @db.execute( <<SQL_STATEMENT)
+	SELECT #{SYSTEMS_TABLE}.* , #{FAMILY_TABLE}.name AS familyname, #{FAMILY_TABLE}.desc AS familydesc
+	FROM #{SYSTEMS_TABLE}
+	LEFT JOIN #{FAMILY_TABLE} 
+	ON  #{SYSTEMS_TABLE}.family_id=#{FAMILY_TABLE}.id
+        WHERE #{SYSTEMS_TABLE}.name = '#{name}'
+>>>>>>> fb88325a1234de22f6cb170e36ab392ff3e7ad9e:systemsDb.rb
 SQL_STATEMENT
    @db.commit()
    return rows
    end   
 
    def queryFamilyMembers(famID)
-      return querySystem("#{POLY_SYS_TABLE}.family_id = '#{famID}'")
+      return querySystem("#{SYSTEMS_TABLE}.family_id = '#{famID}'")
    end   
 
    #returns all systeme for which condition is true
@@ -81,12 +92,12 @@ SQL_STATEMENT
       #statement returns all of the columns in system, as well as the name and
       # description of the table associated with it
       rows = @db.execute( <<-SQL_STATEMENT)
-         SELECT #{POLY_SYS_TABLE}.* , 
+         SELECT #{SYSTEMS_TABLE}.* , 
                 #{FAMILY_TABLE}.name AS familyname, 
                 #{FAMILY_TABLE}.desc AS familydesc
-         FROM #{POLY_SYS_TABLE}
+         FROM #{SYSTEMS_TABLE}
          LEFT JOIN #{FAMILY_TABLE} 
-         ON  #{POLY_SYS_TABLE}.family_id=#{FAMILY_TABLE}.id
+         ON  #{SYSTEMS_TABLE}.family_id=#{FAMILY_TABLE}.id
               WHERE #{condition} 
       SQL_STATEMENT
       @db.commit()
@@ -101,7 +112,7 @@ SQL_STATEMENT
    end   
 
   def queryAll(table)
-     if(table == POLY_SYS_TABLE)
+     if(table == SYSTEMS_TABLE)
         queryAllSystem()
      else
         queryAllFamily()
@@ -120,10 +131,10 @@ SQL_STATEMENT
    def queryAllSystem()
    @db.transaction()
         rows = @db.execute( <<-SQL_STATEMENT)
-   SELECT #{POLY_SYS_TABLE}.* , #{FAMILY_TABLE}.name AS familyname, #{FAMILY_TABLE}.desc AS familydesc
-   FROM #{POLY_SYS_TABLE}
+   SELECT #{SYSTEMS_TABLE}.* , #{FAMILY_TABLE}.name AS familyname, #{FAMILY_TABLE}.desc AS familydesc
+   FROM #{SYSTEMS_TABLE}
    LEFT JOIN #{FAMILY_TABLE} 
-   ON #{POLY_SYS_TABLE}.family_id=#{FAMILY_TABLE}.id
+   ON #{SYSTEMS_TABLE}.family_id=#{FAMILY_TABLE}.id
    SQL_STATEMENT
    @db.commit()
 
@@ -138,8 +149,8 @@ SQL_STATEMENT
 
    def addAndInit(table, name, *args)
       @db.transaction()
-      if table == POLY_SYS_TABLE
-         @db.execute("insert into #{POLY_SYS_TABLE} values('#{name}', '#{args.join("', '")}')") 
+      if table == SYSTEMS_TABLE
+         @db.execute("insert into #{SYSTEMS_TABLE} values('#{name}', '#{args.join("', '")}')") 
       elsif table == FAMILY_TABLE
          @db.execute("insert into #{FAMILY_TABLE} values(NULL, '#{name}', '#{args.join("', '")}')") 
       end

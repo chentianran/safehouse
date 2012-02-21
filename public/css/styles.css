@@ -66,13 +66,19 @@ div.collapsibleDiv {
 	background:#f2f2f2;
 	padding:20px;
 }
+
+#nav {
+text-align: center;
+}
 #nav ul {
+/*   margin-left: auto;
+   margin-right: auto;*/
    margin:0;
    padding:0;
    list-style:none;
 }
 #nav li {
-	border:1px solid #ccc;
+   border:1px solid #ccc;
    display:inline;
    margin:0;
    padding:0;

@@ -1,5 +1,5 @@
-require 'polySysDb'
+require 'systemsDb'
 
-db = PolySysDb.new(ARGV[0])
+db = SystemsDb.new(ARGV[0])
 db.buildNewTable()
 
