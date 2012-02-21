@@ -5,22 +5,6 @@ require 'systemsDb'
 require 'resultParser'
 require 'systemViewParser'
 
-def replaceBools(fieldMap)
-
-   #Some fields are a boolean value, and will be replaced with strings
-   boolSubs = Array[Array["posdim", "Has positive dimensions"]] #,Array["open", "Is unsolved"]]
-
-   output = Array[]
-   boolSubs.each do |field, str|
-      if fieldMap[field] == 1
-         #delete field from map
-         output.push(str)  
-      end
-      fieldMap.delete(field)
-   end
-   return output
-end
-
 helpers do
   def partial( page, variables={} )
       haml page.to_sym, {layout=>false}, variables
@@ -39,12 +23,12 @@ get '/test' do
    ARGV[0]
 end
 get '/systems/?' do
-  @systemData = db.queryAll(SystemsDb::POLY_SYS_TABLE)
+  @systemData = db.queryAll(SystemsDb::SYSTEMS_TABLE)
   haml :systems
 end
 
 get '/systems/*' do |name|
-  @systemDetails = db.queryName(SystemsDb::POLY_SYS_TABLE, name) 
+  @systemDetails = db.queryName(SystemsDb::SYSTEMS_TABLE, name) 
   if @systemDetails.count == 0
      "Page Not Found"
   else

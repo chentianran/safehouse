@@ -61,7 +61,7 @@ db = SystemsDb.new(options.database)
 if options.family
    table = SystemsDb::FAMILY_TABLE
 else
-   table =  SystemsDb::POLY_SYS_TABLE
+   table =  SystemsDb::SYSTEMS_TABLE
 end
 
 case ARGV[0]

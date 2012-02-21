@@ -2,10 +2,10 @@ require 'sqlite3'
 
 class SystemsDb
    :db
-   POLY_SYS_TABLE = "polySys" 
+   SYSTEMS_TABLE = "systems" 
    FAMILY_TABLE = "families"  
    
-   POLY_SYS_FIELDS =  "name text PRIMARY KEY, longname TEXT, desc TEXT, family_id TEXT, dim INTEGER, tdeg INTEGER, mvol INTEGER, soln_count_c INTEGER, soln_count_r INTEGER, posdim INTEGER, open INTEGER, ref STRING, eq_sym STRING, eq_hps STRING, solns_c STRING, solns_r STRING, comp STRING"
+   SYSTEMS_FIELDS =  "name text PRIMARY KEY, longname TEXT, desc TEXT, family_id TEXT, dim INTEGER, tdeg INTEGER, mvol INTEGER, soln_count_c INTEGER, soln_count_r INTEGER, posdim INTEGER, open INTEGER, ref STRING, eq_sym STRING, eq_hps STRING, solns_c STRING, solns_r STRING, comp STRING"
   FAMILY_FIELDS = "id integer PRIMARY KEY AUTOINCREMENT, name text, desc text"
    def initialize(filename)
       @db = SQLite3::Database.new(filename)
@@ -13,7 +13,7 @@ class SystemsDb
    end
 
    def buildNewTable()
-     @db.execute("CREATE TABLE #{POLY_SYS_TABLE}(#{POLY_SYS_FIELDS})")
+     @db.execute("CREATE TABLE #{SYSTEMS_TABLE}(#{SYSTEMS_FIELDS})")
      @db.execute("CREATE TABLE #{FAMILY_TABLE}(#{FAMILY_FIELDS})")
    end
 
@@ -25,7 +25,7 @@ class SystemsDb
    end
 
   def queryName(table, name)
-     if(table == POLY_SYS_TABLE)
+     if(table == SYSTEMS_TABLE)
         queryNameSystem(name)
      else
         queryNameFamily(name)
@@ -43,11 +43,11 @@ class SystemsDb
    def queryNameSystem( name)
 	@db.transaction()
         rows = @db.execute( <<SQL_STATEMENT)
-	SELECT #{POLY_SYS_TABLE}.* , #{FAMILY_TABLE}.name AS familyname, #{FAMILY_TABLE}.desc AS familydesc
-	FROM #{POLY_SYS_TABLE}
+	SELECT #{SYSTEMS_TABLE}.* , #{FAMILY_TABLE}.name AS familyname, #{FAMILY_TABLE}.desc AS familydesc
+	FROM #{SYSTEMS_TABLE}
 	LEFT JOIN #{FAMILY_TABLE} 
-	ON  #{POLY_SYS_TABLE}.family_id=#{FAMILY_TABLE}.id
-        WHERE #{POLY_SYS_TABLE}.name = '#{name}'
+	ON  #{SYSTEMS_TABLE}.family_id=#{FAMILY_TABLE}.id
+        WHERE #{SYSTEMS_TABLE}.name = '#{name}'
 SQL_STATEMENT
 	@db.commit()
 	return rows
@@ -56,11 +56,11 @@ SQL_STATEMENT
    def queryFamilyMembers(famID)
 	@db.transaction()
         rows = @db.execute( <<SQL_STATEMENT)
-	SELECT #{POLY_SYS_TABLE}.* , #{FAMILY_TABLE}.name AS familyname, #{FAMILY_TABLE}.desc AS familydesc
-	FROM #{POLY_SYS_TABLE}
+	SELECT #{SYSTEMS_TABLE}.* , #{FAMILY_TABLE}.name AS familyname, #{FAMILY_TABLE}.desc AS familydesc
+	FROM #{SYSTEMS_TABLE}
 	LEFT JOIN #{FAMILY_TABLE} 
-	ON  #{POLY_SYS_TABLE}.family_id=#{FAMILY_TABLE}.id
-        WHERE #{POLY_SYS_TABLE}.family_id = '#{famID}'
+	ON  #{SYSTEMS_TABLE}.family_id=#{FAMILY_TABLE}.id
+        WHERE #{SYSTEMS_TABLE}.family_id = '#{famID}'
 SQL_STATEMENT
 	@db.commit()
 	return rows
@@ -74,7 +74,7 @@ SQL_STATEMENT
    end   
 
   def queryAll(table)
-     if(table == POLY_SYS_TABLE)
+     if(table == SYSTEMS_TABLE)
         queryAllSystem()
      else
         queryAllFamily()
@@ -93,10 +93,10 @@ SQL_STATEMENT
    def queryAllSystem()
 	@db.transaction()
         rows = @db.execute( <<SQL_STATEMENT)
-	SELECT #{POLY_SYS_TABLE}.* , #{FAMILY_TABLE}.name AS familyname, #{FAMILY_TABLE}.desc AS familydesc
-	FROM #{POLY_SYS_TABLE}
+	SELECT #{SYSTEMS_TABLE}.* , #{FAMILY_TABLE}.name AS familyname, #{FAMILY_TABLE}.desc AS familydesc
+	FROM #{SYSTEMS_TABLE}
 	LEFT JOIN #{FAMILY_TABLE} 
-	ON #{POLY_SYS_TABLE}.family_id=#{FAMILY_TABLE}.id
+	ON #{SYSTEMS_TABLE}.family_id=#{FAMILY_TABLE}.id
 SQL_STATEMENT
 	@db.commit()
 
@@ -111,8 +111,8 @@ SQL_STATEMENT
 
    def addAndInit(table, name, *args)
       @db.transaction()
-      if table == POLY_SYS_TABLE
-         @db.execute("insert into #{POLY_SYS_TABLE} values('#{name}', '#{args.join("', '")}')") 
+      if table == SYSTEMS_TABLE
+         @db.execute("insert into #{SYSTEMS_TABLE} values('#{name}', '#{args.join("', '")}')") 
       elsif table == FAMILY_TABLE
          @db.execute("insert into #{FAMILY_TABLE} values(NULL, '#{name}', '#{args.join("', '")}')") 
       end
