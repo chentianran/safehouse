@@ -61,7 +61,7 @@ db = SystemsDb.new(options.database)
 if options.family
    table = SystemsDb::FAMILY_TABLE
 else
-   table =  SystemsDb::SYSTEMS_TABLE
+   table =  SystemsDb::SYSTEM_TABLE
 end
 
 case ARGV[0]
@@ -71,37 +71,23 @@ when "query"
    if options.all
       rows = db.queryAll(table)
    elsif options.name != ""
-      rows = db.queryName(table, options.name)
+      rows = db.queryByName(table, options.name)
    end
    print "Systems\n"
-   db.fields(table).each do |field|
+   db.columns(table).each do |field|
       print field, " "
    end
    print "\n"
    rows.each do |row|
-      db.fields(table).each do |field|
+      db.columns(table).each do |field|
          print row[field], " "
       end
       print "\n"
    end
-when "queryfamily"
-   rows = db.queryFamily(1)
-   print "Systems\n"
-   db.fields(table).each do |field|
-      print field, " "
-   end
-   print "\n"
-   rows.each do |row|
-      db.fields(table).each do |field|
-         print row[field], " "
-      end
-      print "\n"
-   end
-
 
 when "delete"
    name = ARGV[1]
-   db.deleteName(table, name)
+   db.deleteByName(table, name)
 
 when "addcolumn"
    name = ARGV[1]
@@ -111,13 +97,13 @@ when "addcolumn"
 when "set"
    name = ARGV[1]
    field,value = ARGV[2].split('=')
-   if db.fields(table).include?(field.strip) or field == 'familyname'
+   if db.columns(table).include?(field.strip) or field == 'familyname'
       db.set(table, name, field, value)
    else
       print "Unknown field: ", field, "\n\n"
       print "Valid fields: ", "\n"
-      db.fields(table).each do |field|
-         print field, "\n"
+      db.columns(table).each do |column|
+         print column, "\n"
       end
    end
 

@@ -2,10 +2,10 @@ require 'sqlite3'
 
 class SystemsDb
    :db
-   SYSTEMS_TABLE = "systems" 
+   SYSTEM_TABLE = "systems" 
    FAMILY_TABLE = "families"  
    
-   SYSTEMS_FIELDS =  <<-fieldStr
+   SYSTEM_FIELDS =  <<-fieldStr
                         name text PRIMARY KEY, 
                         longname text, 
                         tdeg integer, 
@@ -25,13 +25,17 @@ class SystemsDb
                      name text, 
                      desc text
                    fieldStr
+
+   #opens the db residing in filename and initializes the class
    def initialize(filename)
       @db = SQLite3::Database.new(filename)
       @db.results_as_hash = true
    end
 
-   def buildNewTable()
-      @db.execute("CREATE TABLE #{SYSTEMS_TABLE}(#{SYSTEMS_FIELDS})")
+   #builds a new database with a table for systems of equations and a table for
+   #families of systems of equations
+   def buildNewDatabase()
+      @db.execute("CREATE TABLE #{SYSTEM_TABLE}(#{SYSTEM_FIELDS})")
       @db.execute("CREATE TABLE #{FAMILY_TABLE}(#{FAMILY_FIELDS})")
    end
    
@@ -42,23 +46,26 @@ class SystemsDb
       return true
    end
 
-  def queryName(table, name)
-      if(table == SYSTEMS_TABLE)
-         return querySystem("#{SYSTEMS_TABLE}.name = '#{name}'")
+   #queries for either a system or family by name 
+   def queryByName(table, name)
+      if(table == SYSTEM_TABLE)
+         return querySystem("#{SYSTEM_TABLE}.name = '#{name}'")
       else
-         return queryNameFamily(name)
+         return queryFamilyByName(name)
       end
-  end
-
-   def queryNameFamily(name)
+   end
+   
+   #internal function that queries for a family by name
+   def queryFamilyByName(name)
       @db.transaction()
       rows = @db.execute("SELECT * FROM #{FAMILY_TABLE} WHERE name = '#{name}'")
       @db.commit()
       return rows
    end   
 
-   def queryFamilyMembers(famID)
-      return querySystem("#{SYSTEMS_TABLE}.family_id = '#{famID}'")
+   #returns all systems that are in the family with id 'famId'
+   def querySystemsByFamId(famId)
+      return querySystem("#{SYSTEM_TABLE}.family_id = '#{famId}'")
    end   
 
    #returns all systeme for which condition is true
@@ -67,27 +74,28 @@ class SystemsDb
       #statement returns all of the columns in system, as well as the name and
       # description of the table associated with it
       rows = @db.execute( <<-SQL_STATEMENT)
-         SELECT #{SYSTEMS_TABLE}.* , 
+         SELECT #{SYSTEM_TABLE}.* , 
                 #{FAMILY_TABLE}.name AS familyname, 
                 #{FAMILY_TABLE}.desc AS familydesc
-         FROM #{SYSTEMS_TABLE}
+         FROM #{SYSTEM_TABLE}
          LEFT JOIN #{FAMILY_TABLE} 
-         ON  #{SYSTEMS_TABLE}.family_id=#{FAMILY_TABLE}.id
-              WHERE #{condition} 
+         ON  #{SYSTEM_TABLE}.family_id=#{FAMILY_TABLE}.id
+         WHERE #{condition} 
       SQL_STATEMENT
       @db.commit()
       return rows
    end
 
-   def queryFamily(famID)
-   @db.transaction()
-        rows = @db.execute("select * from #{FAMILY_TABLE} where family_id = '#{famID}'")
-   @db.commit()
-   return rows
+   def queryFamilyById(famId)
+      @db.transaction()
+      rows = @db.execute("select * from #{FAMILY_TABLE} where family_id = '#{famId}'")
+      @db.commit()
+      return rows
    end   
 
+   #returns all families or systems, depending on the table parameter
    def queryAll(table)
-      if(table == SYSTEMS_TABLE)
+      if(table == SYSTEM_TABLE)
          return querySystem("1")
       else
          return queryAllFamily()
@@ -112,8 +120,8 @@ class SystemsDb
    #add family or system, and initialize all arguments in args 
    def addAndInit(table, name, *args)
       @db.transaction()
-      if table == SYSTEMS_TABLE
-         @db.execute("insert into #{SYSTEMS_TABLE} values('#{name}', '#{args.join("', '")}')") 
+      if table == SYSTEM_TABLE
+         @db.execute("insert into #{SYSTEM_TABLE} values('#{name}', '#{args.join("', '")}')") 
       elsif table == FAMILY_TABLE
          @db.execute("insert into #{FAMILY_TABLE} values(NULL, '#{name}', '#{args.join("', '")}')") 
       end
@@ -121,15 +129,15 @@ class SystemsDb
    end
 
    #sets a field of a family or system
-   #special field family_name in system is used to link a system to a family 
+   #special field familyname in system is used to link a system to a family 
    # by specifying the name, rather than the family_id
    def set(table, name, field, value)
-      if field == 'family_name'
+      if field == 'familyname'
          field = 'family_id'
-         family = queryNameFamily(value)
+         family = queryFamilyByName(value)
          if family.count == 0
             add(FAMILY_TABLE, value)
-            family = queryNameFamily(value)
+            family = queryFamilyByName(value)
          end
          value = family[0]['id']
       end
@@ -138,7 +146,7 @@ class SystemsDb
       @db.commit()
    end
   
-   def deleteName(table, name)
+   def deleteByName(table, name)
       @db.transaction()
       @db.execute("delete from #{table} WHERE name='#{name}'")
       @db.commit()
@@ -159,7 +167,8 @@ class SystemsDb
       end
    end
 
-   def fields(table)
+   #returns the names of the columns in a table
+   def columns(table)
       stmt = @db.prepare("select * from #{table}")
       return stmt.columns
    end

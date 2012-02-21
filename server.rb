@@ -23,12 +23,12 @@ get '/test' do
    ARGV[0]
 end
 get '/systems/?' do
-  @systemData = db.queryAll(SystemsDb::SYSTEMS_TABLE)
+  @systemData = db.queryAll(SystemsDb::SYSTEM_TABLE)
   haml :systems
 end
 
 get '/systems/*' do |name|
-  @systemDetails = db.queryName(SystemsDb::SYSTEMS_TABLE, name) 
+  @systemDetails = db.queryByName(SystemsDb::SYSTEM_TABLE, name) 
   if @systemDetails.count == 0
      "Page Not Found"
   else
@@ -44,27 +44,20 @@ get '/systems/*' do |name|
 end
 
 get '/families/?' do
-  @tableColumns = db.fields(SystemsDb::FAMILY_TABLE)
   @systemData = db.queryAll(SystemsDb::FAMILY_TABLE)
   haml :families
 end
 
 get '/families/*' do |name|
-  family = db.queryName(SystemsDb::FAMILY_TABLE, name)
+  family = db.queryByName(SystemsDb::FAMILY_TABLE, name)
   if family.count == 0 
      "Page Not Found"
   else
-     @systems = db.queryFamilyMembers(family[0]["id"])
-     familyDetails = db.queryName(SystemsDb::FAMILY_TABLE, name) 
+     @systems = db.querySystemsByFamId(family[0]["id"])
+     familyDetails = db.queryByName(SystemsDb::FAMILY_TABLE, name) 
      @pageTitle = familyDetails[0]['name'].capitalize
      @desc = familyDetails[0]['desc']
      haml :familyDetails
   end
-end
-
-get '/partial' do 
-   @tableColumns = db.fields(SystemsDb::FAMILY_TABLE)
-   @systemData = db.queryAll(SystemsDb::FAMILY_TABLE)
-   haml :testPartial1
 end
 
