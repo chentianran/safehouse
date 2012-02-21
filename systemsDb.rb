@@ -1,11 +1,12 @@
 require 'sqlite3' 
-class PolySysDb
+
+class SystemsDb
    :db
    POLY_SYS_TABLE = "polySys" 
    FAMILY_TABLE = "families"  
    
-   POLY_SYS_FIELDS =  "name text PRIMARY KEY, longname text, tdeg integer, mvol text, desc text, family_id text, eq_sym text, eq_lee text, ref text, soln_c integer, soln_r integer, posdim integer"
-   FAMILY_FIELDS = "id integer PRIMARY KEY AUTOINCREMENT, name text, desc text"
+   POLY_SYS_FIELDS =  "name text PRIMARY KEY, longname TEXT, desc TEXT, family_id TEXT, dim INTEGER, tdeg INTEGER, mvol INTEGER, soln_count_c INTEGER, soln_count_r INTEGER, posdim INTEGER, open INTEGER, ref STRING, eq_sym STRING, eq_hps STRING, solns_c STRING, solns_r STRING, comp STRING"
+  FAMILY_FIELDS = "id integer PRIMARY KEY AUTOINCREMENT, name text, desc text"
    def initialize(filename)
       @db = SQLite3::Database.new(filename)
       @db.results_as_hash = true

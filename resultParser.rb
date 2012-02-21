@@ -5,24 +5,26 @@ class ResultParser
       @hash= resultHash
    end
 
-   def replaceBools(fields, strings)
+   def replaceBools(fieldReplacements)
       output = Array[]
-      fields.each_with_index do |field, index|
+      fieldReplacements.each do |field, replacement|
          if @hash[field] == 1
-            output.push(strings[index])  
+            output.push(replacement)  
          end
       end
       return output
    end
 
-   def titleData(fields, titles) 
+   def titleData( fieldTitles ) 
       output = Array[]
-      fields.each_with_index do |field, index|
-         data = @hash[field]
+      fieldTitles.each do |fieldTitle|
+			field = fieldTitle[0]
+			title = fieldTitle[1]
+     	   data = @hash[field]
          if data != nil
-            output.push(Array[titles[index], data])  
+            output.push(Array[title, data])  
          end
-      end
+		end	
       return output
    end
 end

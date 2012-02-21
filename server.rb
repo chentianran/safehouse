@@ -1,8 +1,9 @@
 require 'sinatra'
 require 'sqlite3'
 require 'haml'
-require 'polySysDb'
+require 'systemsDb'
 require 'resultParser'
+require 'systemViewParser'
 
 def replaceBools(fieldMap)
 
@@ -27,55 +28,50 @@ helpers do
 end
 
 #initialize database
-databaseFile = "polysys.db"
+databaseFile = "systems.db"
 if ARGV.count > 0
    databaseFile = ARGV[0]
    print ARGV[0]
 end
 
-db = PolySysDb.new(databaseFile.strip)
+db = SystemsDb.new(databaseFile.strip)
 get '/test' do
    ARGV[0]
 end
 get '/systems/?' do
-  @systemData = db.queryAll(PolySysDb::POLY_SYS_TABLE)
+  @systemData = db.queryAll(SystemsDb::POLY_SYS_TABLE)
   haml :systems
 end
 
 get '/systems/*' do |name|
-  @systemDetails = db.queryName(PolySysDb::POLY_SYS_TABLE, name) 
+  @systemDetails = db.queryName(SystemsDb::POLY_SYS_TABLE, name) 
   if @systemDetails.count == 0
      "Page Not Found"
   else
-     rp = ResultParser.new(@systemDetails[0])
-     if @systemDetails[0]['longname'] == nil
-        @pageTitle = @systemDetails[0]['name'].capitalize
-     else
-        @pageTitle = @systemDetails[0]['longname'].capitalize
-     end
-     @desc = @systemDetails[0]['desc']
-     @familyDesc = @systemDetails[0]['familydesc']
+     rp =SystemViewParser.new(@systemDetails[0])
+     @pageTitle = rp.getTitle().capitalize
+     @tableValues = rp.getCornerTableData()
+     @desc = rp.getDescriptions()
      @family = @systemDetails[0]['familyname']
-     @tableValues = rp.titleData(Array['tdeg','mvol','posdim','soln_c','soln_r'], Array['Tdeg', 'M vol', 'pos dim', 'Soln C', 'Soln r'])
-     @fullRowValues =  rp.replaceBools(Array["posdim"], Array["has posDim"])
-     @collapsibleBoxVals = rp.titleData(Array['eq_sym', 'eq_lee', 'ref'], Array['Eq Sym', 'Eq Lee', 'References'])
+     @fullRowValues =  rp.getBoolReplacements()
+     @collapsibleBoxVals = rp.getCollapsibleBoxesData()
      haml :systemDetails
   end
 end
 
 get '/families/?' do
-  @tableColumns = db.fields(PolySysDb::FAMILY_TABLE)
-  @systemData = db.queryAll(PolySysDb::FAMILY_TABLE)
+  @tableColumns = db.fields(SystemsDb::FAMILY_TABLE)
+  @systemData = db.queryAll(SystemsDb::FAMILY_TABLE)
   haml :families
 end
 
 get '/families/*' do |name|
-  family = db.queryName(PolySysDb::FAMILY_TABLE, name)
+  family = db.queryName(SystemsDb::FAMILY_TABLE, name)
   if family.count == 0 
      "Page Not Found"
   else
      @systems = db.queryFamilyMembers(family[0]["id"])
-     familyDetails = db.queryName(PolySysDb::FAMILY_TABLE, name) 
+     familyDetails = db.queryName(SystemsDb::FAMILY_TABLE, name) 
      @pageTitle = familyDetails[0]['name'].capitalize
      @desc = familyDetails[0]['desc']
      haml :familyDetails
@@ -83,8 +79,8 @@ get '/families/*' do |name|
 end
 
 get '/partial' do 
-   @tableColumns = db.fields(PolySysDb::FAMILY_TABLE)
-   @systemData = db.queryAll(PolySysDb::FAMILY_TABLE)
+   @tableColumns = db.fields(SystemsDb::FAMILY_TABLE)
+   @systemData = db.queryAll(SystemsDb::FAMILY_TABLE)
    haml :testPartial1
 end
 
