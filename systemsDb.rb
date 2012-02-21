@@ -25,61 +25,36 @@ class SystemsDb
                      name text, 
                      desc text
                    fieldStr
-
-  def initialize(filename)
+   def initialize(filename)
       @db = SQLite3::Database.new(filename)
       @db.results_as_hash = true
    end
 
    def buildNewTable()
-     @db.execute("CREATE TABLE #{SYSTEMS_TABLE}(#{SYSTEMS_FIELDS})")
-     @db.execute("CREATE TABLE #{FAMILY_TABLE}(#{FAMILY_FIELDS})")
+      @db.execute("CREATE TABLE #{SYSTEMS_TABLE}(#{SYSTEMS_FIELDS})")
+      @db.execute("CREATE TABLE #{FAMILY_TABLE}(#{FAMILY_FIELDS})")
    end
-
+   
    def dropTable(table) 
-     @db.execute("DROP TABLE #{table}")
-     rescue SQLite3::SQLException
-       return false
-     return true
+      @db.execute("DROP TABLE #{table}")
+      rescue SQLite3::SQLException
+         return false
+      return true
    end
 
   def queryName(table, name)
-     if(table == SYSTEMS_TABLE)
-        queryNameSystem(name)
-     else
-        queryNameFamily(name)
-     end
+      if(table == SYSTEMS_TABLE)
+         return querySystem("#{SYSTEMS_TABLE}.name = '#{name}'")
+      else
+         return queryNameFamily(name)
+      end
   end
 
    def queryNameFamily(name)
-   @db.transaction()
-        rows = @db.execute("SELECT * FROM #{FAMILY_TABLE} WHERE name = '#{name}'")
-   @db.commit()
-   return rows
-   end   
-
-   #db.execute("BEGIN TRANSACTION")
-   def queryNameSystem( name)
-<<<<<<< HEAD:polySysDb.rb
-   @db.transaction()
-        rows = @db.execute( <<-SQL_STATEMENT)
-   SELECT #{SYSTEMS_TABLE}.* , #{FAMILY_TABLE}.name AS familyname, #{FAMILY_TABLE}.desc AS familydesc
-   FROM #{SYSTEMS_TABLE}
-   LEFT JOIN #{FAMILY_TABLE} 
-   ON  #{SYSTEMS_TABLE}.family_id=#{FAMILY_TABLE}.id
-        WHERE #{SYSTEMS_TABLE}.name = '#{name}'
-=======
-	@db.transaction()
-        rows = @db.execute( <<SQL_STATEMENT)
-	SELECT #{SYSTEMS_TABLE}.* , #{FAMILY_TABLE}.name AS familyname, #{FAMILY_TABLE}.desc AS familydesc
-	FROM #{SYSTEMS_TABLE}
-	LEFT JOIN #{FAMILY_TABLE} 
-	ON  #{SYSTEMS_TABLE}.family_id=#{FAMILY_TABLE}.id
-        WHERE #{SYSTEMS_TABLE}.name = '#{name}'
->>>>>>> fb88325a1234de22f6cb170e36ab392ff3e7ad9e:systemsDb.rb
-SQL_STATEMENT
-   @db.commit()
-   return rows
+      @db.transaction()
+      rows = @db.execute("SELECT * FROM #{FAMILY_TABLE} WHERE name = '#{name}'")
+      @db.commit()
+      return rows
    end   
 
    def queryFamilyMembers(famID)
@@ -111,42 +86,30 @@ SQL_STATEMENT
    return rows
    end   
 
-  def queryAll(table)
-     if(table == SYSTEMS_TABLE)
-        queryAllSystem()
-     else
-        queryAllFamily()
-     end
-  end
+   def queryAll(table)
+      if(table == SYSTEMS_TABLE)
+         return querySystem("1")
+      else
+         return queryAllFamily()
+      end
+   end
 
+   #return all families in the family table
    def queryAllFamily()
-   @db.transaction()
-        rows = @db.execute("SELECT * FROM #{FAMILY_TABLE}")
-   @db.commit()
-   return rows
+      @db.transaction()
+      rows = @db.execute("SELECT * FROM #{FAMILY_TABLE}")
+      @db.commit()
+      return rows
    end   
-
-
-   #dangerous method  
-   def queryAllSystem()
-   @db.transaction()
-        rows = @db.execute( <<-SQL_STATEMENT)
-   SELECT #{SYSTEMS_TABLE}.* , #{FAMILY_TABLE}.name AS familyname, #{FAMILY_TABLE}.desc AS familydesc
-   FROM #{SYSTEMS_TABLE}
-   LEFT JOIN #{FAMILY_TABLE} 
-   ON #{SYSTEMS_TABLE}.family_id=#{FAMILY_TABLE}.id
-   SQL_STATEMENT
-   @db.commit()
-
-   return rows
-   end   
-
+   
+   #add a family or system to the database
    def add(table, name)
       @db.transaction()
       @db.execute("insert into #{table} (name) values ('#{name}')") 
       @db.commit()
    end 
 
+   #add family or system, and initialize all arguments in args 
    def addAndInit(table, name, *args)
       @db.transaction()
       if table == SYSTEMS_TABLE
@@ -157,20 +120,22 @@ SQL_STATEMENT
       @db.commit()
    end
 
-
+   #sets a field of a family or system
+   #special field family_name in system is used to link a system to a family 
+   # by specifying the name, rather than the family_id
    def set(table, name, field, value)
-       if field == 'familyname'
-          field = 'family_id'
-          family = queryNameFamily(value)
-          if family.count == 0
-             add(FAMILY_TABLE, value)
-             family = queryNameFamily(value)
-          end
-          value = family[0]['id']
-       end
-       @db.transaction()
-       @db.execute("update #{table} set #{field} = '#{value}' where name = '#{name}'")
-       @db.commit()
+      if field == 'family_name'
+         field = 'family_id'
+         family = queryNameFamily(value)
+         if family.count == 0
+            add(FAMILY_TABLE, value)
+            family = queryNameFamily(value)
+         end
+         value = family[0]['id']
+      end
+      @db.transaction()
+      @db.execute("update #{table} set #{field} = '#{value}' where name = '#{name}'")
+      @db.commit()
    end
   
    def deleteName(table, name)
@@ -195,8 +160,8 @@ SQL_STATEMENT
    end
 
    def fields(table)
-       stmt = @db.prepare("select * from #{table}")
-       return stmt.columns
+      stmt = @db.prepare("select * from #{table}")
+      return stmt.columns
    end
 end
 
