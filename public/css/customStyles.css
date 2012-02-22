@@ -1,0 +1,94 @@
+#header{
+	text-align:center;
+}
+
+p.desc {
+  border: 1px solid black;
+}
+
+table.gridtable {
+   width:100%;
+	border: 2px solid black;
+	border-spacing: 0px;
+	border-collapse:separate;
+	
+}
+table.gridtable th {
+	padding: 8px;
+	border: 1px solid black;
+}
+table.gridtable td {
+	padding:8px;
+	border: 1px solid black;
+}
+
+/*collapsible div*/
+div.collapsibleHeader {
+	border:1px solid #ccc;
+   overflow:hidden;   
+}
+div.collapsibleDiv {
+	border:1px solid #ccc;
+	padding:20px;
+}
+
+#collapsibleBoxSection
+{
+   clear:both;
+}
+
+
+
+table.detailstable {
+    width:50%;
+    float:left;
+    padding: 3px 8px 8px 0px;
+    border-spacing: 0px;
+    border-collapse: separate;
+	
+}
+table.detailstable th {
+	padding: 8px;
+	border: 1px solid black;
+}
+table.detailstable td {
+	padding:8px;
+	border: 1px solid black;
+}
+#nav {
+   text-align: center;
+}
+#nav ul {
+/*   margin-left: auto;
+   margin-right: auto;*/
+   margin:0;
+   padding:0;
+   list-style:none;
+}
+#nav li {
+   border:1px solid #ccc;
+   display:inline;
+   margin:0;
+   padding:0;
+}
+/*
+#nav{ 
+   float:left;
+   width:20;
+}
+#nav ul {
+   margin:0;
+   padding:0;
+   list-style-type:none;
+}
+#nav li {
+	border:1px solid #ccc;
+   margin:0;
+   padding:0;
+}
+*/
+#main{
+   overflow:auto;
+}
+
+

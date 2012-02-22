@@ -172,6 +172,7 @@ class SystemsDb
       stmt = @db.prepare("select * from #{table}")
       return stmt.columns
    end
+
 end
 
 
