@@ -10,8 +10,7 @@ table.gridtable {
    width:100%;
 	border: 2px solid black;
 	border-spacing: 0px;
-	border-collapse:separate;
-	
+	border-collapse: separate;
 }
 table.gridtable th {
 	padding: 8px;
@@ -24,9 +23,19 @@ table.gridtable td {
 
 /*collapsible div*/
 div.collapsibleHeader {
+   color: #FFFFFF;
+	background: #636363;
 	border:1px solid #ccc;
    overflow:hidden;   
+   margin-top:10px;
 }
+
+div.collapsibleHeader h2{
+   text-align: center;
+   color:  #FFFFFF;
+  
+}
+
 div.collapsibleDiv {
 	border:1px solid #ccc;
 	padding:20px;

@@ -33,7 +33,7 @@ get '/systems/*' do |name|
      "Page Not Found"
   else
      rp =SystemViewParser.new(@systemDetails[0])
-     @pageTitle = rp.getTitle().capitalize
+     @pageTitle = rp.getTitle()
      @tableValues = rp.getCornerTableData()
      @desc = rp.getDescriptions()
      @family = @systemDetails[0]['familyname']
@@ -55,7 +55,7 @@ get '/families/*' do |name|
   else
      @systems = db.querySystemsByFamId(family[0]["id"])
      familyDetails = db.queryByName(SystemsDb::FAMILY_TABLE, name) 
-     @pageTitle = familyDetails[0]['name'].capitalize
+     @pageTitle = familyDetails[0]['name']
      @desc = familyDetails[0]['desc']
      haml :familyDetails
   end

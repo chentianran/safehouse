@@ -9,14 +9,14 @@ body {
 	margin: 0px;
 	padding: 0;
 	background: #FFFFFF url(/images/img01.jpg) repeat-x left top;
-	font-family: "palatino", georgia,  serif;
-	font-size: 12px;
+/*	font-family: 'playfair', 'palatino', 'georgia',  serif;*/
+	font-family: 'Playfair Display', 'arial',  serif;
+	font-size: 14px;
 	color: #838383;
 }
 
 h1, h2, h3 {
 	margin: 0;
-	text-transform: uppercase;
 	font-weight: normal;
 	color: #000000;
 }
@@ -94,7 +94,7 @@ hr {
 
 #header {
 	width: 920px;
-	height: 50px;
+	height: 80px;
 	margin: 0 auto;
 	padding-top: 10px;
 }
@@ -127,9 +127,7 @@ hr {
 	letter-spacing: -1px;
 	text-decoration: none;
 	text-align: center;
-	text-transform: lowercase;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;
+/*	font-family: Arial, Helvetica, sans-serif;*/
 	font-weight: normal;
 	color: #8E8E8E;
 }
@@ -169,7 +167,7 @@ hr {
 
 #search input {
 	float: left;
-	font: 12px Georgia, "Times New Roman", Times, serif;
+/*	font: 12px Georgia, "Times New Roman", Times, serif;*/
 }
 
 #search-text {
@@ -183,13 +181,13 @@ hr {
 /* Page */
 
 #page {
-	/*width: 920px;*/
+	width: 920px;
 	margin: 0px auto;
 	margin: 0 auto;
 }
 
 #page-bgtop {
-	/*width: 920px;*/
+	width: 920px;
 	margin: 0px auto;
 	padding: 40px 40px 0px 40px;
 }
@@ -198,7 +196,7 @@ hr {
 
 #logo {
 	width: 920px;
-	height: 90px;
+	height: 0px;
 	margin: 0 auto;
 	padding: 30px 20px 30px 20px;
 }
@@ -206,16 +204,15 @@ hr {
 #logo h1, #logo p {
 	margin: 0px;
 	line-height: normal;
-	text-transform: lowercase;
 	font-weight: normal;
 	color: #FFFFFF;
 }
 
 #logo p {
-	margin-top: -4px;
+	/*margin-top: -4px;
 	text-transform: lowercase;
-	font-family: Georgia, "Times New Roman", Times, serif;
-	font-size: 13px;
+	font-family: Georgia, "Times New Roman", Times, serif;*/
+	font-size: 15px;
 	color: #404040;
 }
 
@@ -235,7 +232,8 @@ hr {
 /* Content */
 
 #content {
-	margin-top: -110px;
+	float: right;
+	/*margin-top: -110px;*/
 	background: url(/images/img05.jpg) repeat-y left top;
 }
 
@@ -263,7 +261,6 @@ hr {
 
 .post .title a {
 	text-decoration: none;
-	text-transform: capitalize;
 	font-size: 30px;
 	color: #404040;
 }
@@ -276,7 +273,6 @@ hr {
 	padding: 4px 30px 2px 0px;
 	font-family: Arial, Helvetica, sans-serif;
 	font-weight: normal;
-	font-size: 11px;
 	font-style: italic;
 	color: #66665E;
 }
@@ -302,8 +298,7 @@ hr {
 	background: #90BF35;
 	border: 1px solid #5F817E;
 	text-decoration: none;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 11px;
+	/*font-family: Arial, Helvetica, sans-serif;*/
 	text-decoration: none;
 	font-weight: bold;
 	color: #FFFFFF;
@@ -314,7 +309,7 @@ hr {
 #sidebar {
 	float: left;
 	width: 280px;
-	font-family: Arial, Helvetica, sans-serif;
+/*	font-family: Arial, Helvetica, sans-serif;*/
 	font-size: 12px;
 }
 
@@ -332,13 +327,22 @@ hr {
 
 #sidebar li ul {
 	margin: 0px 20px;
+   list-style: none;
 }
 
 #sidebar li li {
 	margin: 0px 0px 0px 0;
-	padding: 10px 0px 10px 20px;
+	/*padding: 10px 0px 10px 20px;*/
+	border-bottom: 1px solid #E0E0E0;
+	/*background: url(/images/img07.jpg) no-repeat left 13px;*/
+}
+
+#sidebar li li.bool {
+	margin: 0px 0px 0px 0;
+	padding: 10px 0px 10px 25px;
 	border-bottom: 1px solid #E0E0E0;
 	background: url(/images/img07.jpg) no-repeat left 13px;
+
 }
 
 #sidebar li li a {
@@ -360,7 +364,6 @@ hr {
 	padding: 4px 0px 0px 20px;
 	background: url(/images/img03.jpg) no-repeat left top;
 	letter-spacing: -1px;
-	text-transform: uppercase;
 	font-size: 18px;
 	font-weight: normal;
 	color: #FFFFFF;
@@ -456,7 +459,6 @@ hr {
 	padding: 30px 0px 0px 0px;
 	text-align: center;
 	line-height: normal;
-	font-size: 12px;
 }
 
 #footer a {

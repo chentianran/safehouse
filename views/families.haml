@@ -11,18 +11,27 @@
       %link{"rel" => "stylesheet", "href" => "/css/styles.css", "type" => "text/css" }
    %body
       = partial "bar"
-      %div{:id=>"main"}
-         #header
-            %h1 Families  
-         %table.gridtable
-            %tr
-            %th= nameTitle
-            - columnTitles.each do |columnTitle|
-               %th= columnTitle 
-            %tbody
-               - @systemData.each do |row|
-                  %tr
-                     %td
-                        %a{:href=>"/families/" + row[nameField]}= row[nameField]
-                     - columnFields.each do |field|
-                        %td= row[field]
+      #page
+         #content
+            #content-bgtop
+               #content-bgbtm
+                  %h1 Families  
+                  %table.gridtable
+                     %tr
+                     %th= nameTitle
+                     - columnTitles.each do |columnTitle|
+                        %th= columnTitle 
+                     %tbody
+                        - @systemData.each do |row|
+                           %tr
+                              %td
+                                 %a{:href=>"/families/" + row[nameField]}= row[nameField]
+                              - columnFields.each do |field|
+                                 %td= row[field]
+         #sidebar
+            %ul
+               %li
+                  %h2 Properties
+                  %ul
+                     %li filler
+ 

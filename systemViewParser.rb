@@ -9,8 +9,8 @@ class SystemViewParser
 
    #Description box
    #Format for each field: [field, human readable title]
-   @@descriptionFields = [  ['desc', 'Description']]
-
+   @@descriptionFields = [ ['familydesc', 'Family Description' ],
+                           ['desc', 'Description'] ]
    #Format for each field: [field, human readable title]
    @@cornerTableFields = [  ['dim', 'Dimension'], 
                            ['tdeg', 'Total Degree'], 

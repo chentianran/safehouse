@@ -5,43 +5,46 @@
       %meta{ "http-equiv" => "Content-Type", :content => "text/html; charset=utf-8"}
    %link{"rel" => "stylesheet", "href" => "/css/customStyles.css", "type" => "text/css" }   
    %link{"rel" => "stylesheet", "href" => "/css/styles.css", "type" => "text/css", "media"=>"screen"}   
-      %script{"src" => "/js/toggleDiv.js", "type"=>"text/javascript"}
+   %link{"rel"=>"stylesheet", "href"=>"http://fonts.googleapis.com/css?family=Playfair+Display", "type"=>"text/css"}
+    
+   %script{"src" => "/js/toggleDiv.js", "type"=>"text/javascript"}
    %body
-      #header
-         = partial "bar"
-      #logo
-      %hr
+      = partial "bar"
       #page
          #content
             #content-bgtop
                #content-bgbtm
                   %div.post
-                     %h1= @pageTitle + " Details"
-                     %table.detailstable
-                        %tbody
-                           %tr 
-                              %th="Field" 
-                              %th="Data"
-                           %tr 
-                              %td
-                                 %a{:href=>url("/families/")} Family 
-                              %td
-                                 -if @family != nil
-                                    %a{:href=>url("/families/"+@family)}= @family
-                           - @tableValues.each do |title, body|
-                              %tr
-                                 %td= title
-                                 %td= body
-                           - @fullRowValues.each do |value|
-                              %tr
-                                 %td{:colspan=>'2'}= value
-                     %a= "<B>System Description:</B><BR> #{@desc}"      
+                     %h1= @pageTitle  
+                     -@desc.each do |title, desc|
+                        %p= "<BR><B>#{title}</B><BR> #{desc}" 
                      %div{:id=>"collapsibleBoxSection"}
                         - @collapsibleBoxVals.each do |title, body|
                            %div.collapsibleHeader{"onclick"=>"switchMenu('#{title}')"}
-                              %a= title
+                              %h2= title
                            %div.collapsibleDiv{:id=>title}
                               %a= body
                         -#initialize all boxes to be closed initially
                         - @collapsibleBoxVals.each do |title, body|
                            %script= "switchMenu('#{title}')"
+         #sidebar
+            %ul
+               %li
+                  %h2 Properties
+                  -if @family != nil
+                     %ul
+                        %li
+                           %p
+                              %b= "Family: "
+                              %a{:href=>url("/families/"+@family)}= @family
+                              
+                  - @tableValues.each do |title, body|
+                     %ul
+                        %li
+                           %p
+                              %b="#{title}: " 
+                              ="#{body}"
+                  - @fullRowValues.each do |value|
+                     %ul
+                        %li.bool= value
+

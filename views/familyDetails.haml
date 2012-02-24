@@ -6,12 +6,21 @@
       %link{"rel" => "stylesheet", "href" => "/css/styles.css", "type" => "text/css" }   
    %body
       = partial "bar"
-      %div{:id=>"main"}
-         #header
-            %h1=  @pageTitle + " Details"
-         %p.desc= @desc
-         %p= "Members: "             
-         %ul
-         - @systems.each do |system|
-            %li
-               %a{:href=>"/systems/" + system["name"]}= system["name"]
+      #page
+         #content
+            #content-bgtop
+               #content-bgbtm
+                  %h1=  @pageTitle
+                  %p.desc= @desc
+                  %p= "Members: "             
+                  %ul
+                  - @systems.each do |system|
+                     %li
+                        %a{:href=>"/systems/" + system["name"]}= system["name"]
+         #sidebar
+            %ul
+               %li
+                  %h2 Properties
+                  %ul
+                     %li filler
+                        
