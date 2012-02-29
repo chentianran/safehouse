@@ -1,9 +1,4 @@
 !!!
-- #edit these arrays to change the columns displayed. No ordered hash in 1.8, so 2 arrays work 
-- nameTitle = "Name"
-- nameField = "name"
-- columnTitles = Array[ "Full Name", "Family", "Description"] #what should be displayed 
-- columnFields = Array[ "longname", "familyname", "desc" ] #what the columns are named in the sql database  
 %html{ :xmlns => "http://www.w3.org/1999/xhtml", :lang => "en", "xml:lang" => "en" }
    %head
       %title Systems of Equations
@@ -19,29 +14,7 @@
                #content-bgbtm
                   %div.post
                      %h1 Systems of Equations
-                     %table.gridtable
-                        %tr
-                        %th.dark= nameTitle
-                        - dark = false
-                        - columnTitles.each do |columnTitle|
-                           - if dark
-                              %th.dark= columnTitle 
-                           -else 
-                              %th= columnTitle
-                           - dark = !dark
-                        %tbody
-                           - @systemData.each do |row|
-                              %tr
-                                 %td.dark
-                                    %a{:href=>"/systems/" + row[nameField]}= row[nameField]
-                                 - dark = false
-                                 - columnFields.each do |field|
-                                    -if dark
-                                       %td.dark= row[field]
-                                    - else 
-                                       %td= row[field]
-                                    - dark = !dark
-
+                     = partial "systemsTable", {:nameDesc => @systemData, :type=>'systems'} 
          #sidebar
             %ul
                %li

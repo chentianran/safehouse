@@ -13,11 +13,8 @@
                #content-bgbtm
                   %h1=  @pageTitle
                   %p.desc= @desc
-                  %p= "Members: "             
-                  %ul
-                  - @systems.each do |system|
-                     %li
-                        %a{:href=>"/systems/" + system["name"]}= system["name"]
+                  %h2= "Members: "             
+                  = partial "systemsTable", {:nameDesc => @systemData, :type=>'systems'}
          #sidebar
             %ul
                %li

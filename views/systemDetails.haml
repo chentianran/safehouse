@@ -19,13 +19,16 @@
                         %p= "<B>#{title}</B><BR> #{desc}" 
                      %div{:id=>"collapsibleBoxSection"}
                         - @collapsibleBoxVals.each do |title, body|
-                           %div.collapsibleHeader{"onclick"=>"switchMenu('#{title}')"}
+                           %div.collapsibleHeader{:id=>"#{title}Header","onclick"=>"switchMenu('#{title}','#{title}Header')"}
                               %h2= title
                            %div.collapsibleDiv{:id=>title}
-                              %a= body
+                              %p= body
                         -#initialize all boxes to be closed initially
                         - @collapsibleBoxVals.each do |title, body|
-                           %script= "switchMenu('#{title}')"
+                           %script= "switchMenu('#{title}','#{title}Header')"
+
+                        %script= "switchMenu('Reference','ReferenceHeader')"
+                        %script= "switchMenu('Equations','EquationsHeader')"
          #sidebar
             %ul
                %li

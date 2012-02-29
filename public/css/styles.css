@@ -252,10 +252,13 @@ hr {
 /*collapsible div*/
 #content div.collapsibleHeader {
    color: #FFFFFF;
-	background: #636363;
 	border:1px solid #ccc;
    overflow:hidden;   
    margin-top:10px;
+	background:  #636363 url(/images/expand.png) no-repeat 4px 4px ;
+}
+#content div.collapsibleHeader:hover {
+   background-color: black;
 }
 
 #content div.collapsibleHeader h2{
@@ -267,8 +270,9 @@ hr {
 
 #content div.collapsibleDiv {
 	border:1px solid #ccc;
-	padding:20px;
+   text-align: center;
 }
+
 
 #collapsibleBoxSection
 {
@@ -403,6 +407,19 @@ hr {
 	font-size: 18px;
 	font-weight: normal;
 	color: #FFFFFF;
+}
+
+#sidebar h2 a {
+	letter-spacing: -1px;
+   font-family:Impact, Charcoal, sans-serif; 
+	font-size: 18px;
+	font-weight: normal;
+	color: #FFFFFF;
+
+}
+	
+#sidebar h2 a:hover {
+	color: #aAaAaA;
 }
 
 #sidebar p {

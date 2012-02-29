@@ -45,7 +45,7 @@ get '/systems/*' do |name|
 end
 
 get '/families/?' do
-  @systemData = db.queryAll(SystemsDb::FAMILY_TABLE)
+  @familyData= db.queryAll(SystemsDb::FAMILY_TABLE)
   haml :families
 end
 
@@ -54,7 +54,7 @@ get '/families/*' do |name|
   if family.count == 0 
      "Page Not Found"
   else
-     @systems = db.querySystemsByFamId(family[0]["id"])
+     @systemData = db.querySystemsByFamId(family[0]["id"])
      familyDetails = db.queryByName(SystemsDb::FAMILY_TABLE, name) 
      @pageTitle = familyDetails[0]['name']
      @desc = familyDetails[0]['desc']

@@ -7,19 +7,19 @@ p.desc {
   border: 1px solid black;
 }
 
-table.gridtable {
+table.gridtable 
+{
    width:100%;
 }
-table.gridtable th {
-
-	background: #cccccc;
+table.gridtable th 
+{
    vertical-align:top;
    text-align:left;
 	padding: 8px;
 }
 
-table.gridtable th.dark {
-
+table.gridtable th.dark 
+{
 	background: #aaaaaa;
    vertical-align:top;
    text-align:left;

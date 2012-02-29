@@ -18,13 +18,7 @@
             #content-bgtop
                #content-bgbtm
                   %h1 Families  
-                  %ul
-                     - @systemData.each do |row|
-                        %li
-                           %b
-                              %a{:href=>"/families/" + row[nameField]}= row[nameField]
-                           - columnFields.each do |field|
-                              = ": #{row[field]}"
+                  = partial "systemsTable", {:nameDesc => @familyData, :type=>'families'}       
          #sidebar
             %ul
                %li
