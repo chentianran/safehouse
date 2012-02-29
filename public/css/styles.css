@@ -9,10 +9,10 @@ body {
 	margin: 0px;
 	padding: 0;
 	background: #FFFFFF url(/images/img01.jpg) repeat-x left top;
-/*	font-family: 'playfair', 'palatino', 'georgia',  serif;*/
-	font-family: 'Playfair Display', 'arial',  serif;
+	font-family: 'playfair', 'palatino', 'georgia',  serif;
+	/*font-family: 'Playfair Display', 'al',  serif;*/
 	font-size: 14px;
-	color: #838383;
+	color: black; /*#838383;*/
 }
 
 h1, h2, h3 {
@@ -102,6 +102,8 @@ hr {
 /* Menu */
 
 #menu {
+   font-family:Impact, Charcoal, sans-serif; 
+   font-size: 17px;
 	float: left;
 	width: 500px;
 }
@@ -124,7 +126,6 @@ hr {
 	float: left;
 	margin: 0px 6px;
 	padding: 6px 20px 6px 20px;
-	letter-spacing: -1px;
 	text-decoration: none;
 	text-align: center;
 /*	font-family: Arial, Helvetica, sans-serif;*/
@@ -185,6 +186,7 @@ hr {
 	margin: 0px auto;
 	margin: 0 auto;
 }
+
 
 #page-bgtop {
 	width: 920px;
@@ -247,6 +249,39 @@ hr {
 	background: url(/images/img06.jpg) no-repeat left bottom;
 }
 
+/*collapsible div*/
+#content div.collapsibleHeader {
+   color: #FFFFFF;
+	background: #636363;
+	border:1px solid #ccc;
+   overflow:hidden;   
+   margin-top:10px;
+}
+
+#content div.collapsibleHeader h2{
+   text-align: center;
+   color:  #FFFFFF;
+   font-family: 'impact', sans-serif;
+  
+}
+
+#content div.collapsibleDiv {
+	border:1px solid #ccc;
+	padding:20px;
+}
+
+#collapsibleBoxSection
+{
+   clear:both;
+}
+
+#content a.title {
+   font-weight:bold;
+}
+
+
+
+
 /* Post */
 
 .post {
@@ -271,7 +306,7 @@ hr {
 .post .meta {
 	margin-left: 2px;
 	padding: 4px 30px 2px 0px;
-	font-family: Arial, Helvetica, sans-serif;
+/*	font-family: 'playfair', 'palatino', 'georgia',  serif;*/
 	font-weight: normal;
 	font-style: italic;
 	color: #66665E;
@@ -310,7 +345,7 @@ hr {
 	float: left;
 	width: 280px;
 /*	font-family: Arial, Helvetica, sans-serif;*/
-	font-size: 12px;
+	font-size: 14px;
 }
 
 #sidebar ul {
@@ -364,6 +399,7 @@ hr {
 	padding: 4px 0px 0px 20px;
 	background: url(/images/img03.jpg) no-repeat left top;
 	letter-spacing: -1px;
+   font-family:Impact, Charcoal, sans-serif; 
 	font-size: 18px;
 	font-weight: normal;
 	color: #FFFFFF;
@@ -377,7 +413,7 @@ hr {
 	text-align: left;
 	text-decoration: none;
 	font-weight: bold;
-	color: #666666;
+	color: black;
 }
 
 #sidebar li li a:hover {
@@ -385,7 +421,7 @@ hr {
 }
 
 /* Calendar */
-
+/*
 #calendar {
 }
 
@@ -440,6 +476,7 @@ hr {
 #calendar #today {
 	background: #24130F;
 }
+*/
 
 /* Footer */
 

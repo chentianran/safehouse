@@ -3,7 +3,6 @@
    %head
       %title Polynomial System Details
       %meta{ "http-equiv" => "Content-Type", :content => "text/html; charset=utf-8"}
-   %link{"rel" => "stylesheet", "href" => "/css/customStyles.css", "type" => "text/css" }   
    %link{"rel" => "stylesheet", "href" => "/css/styles.css", "type" => "text/css", "media"=>"screen"}   
    %link{"rel"=>"stylesheet", "href"=>"http://fonts.googleapis.com/css?family=Playfair+Display", "type"=>"text/css"}
     
@@ -17,7 +16,7 @@
                   %div.post
                      %h1= @pageTitle  
                      -@desc.each do |title, desc|
-                        %p= "<BR><B>#{title}</B><BR> #{desc}" 
+                        %p= "<B>#{title}</B><BR> #{desc}" 
                      %div{:id=>"collapsibleBoxSection"}
                         - @collapsibleBoxVals.each do |title, body|
                            %div.collapsibleHeader{"onclick"=>"switchMenu('#{title}')"}

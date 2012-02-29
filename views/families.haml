@@ -8,6 +8,8 @@
    %head
       %title Systems of Equations
       %meta{ "http-equiv" => "Content-Type", :content => "text/html; charset=utf-8"}
+      %link{"rel" => "stylesheet", "href" => "/css/customStyles.css", "type" => "text/css" }   
+      %link{"rel"=>"stylesheet", "href"=>"http://fonts.googleapis.com/css?family=Playfair+Display", "type"=>"text/css"}
       %link{"rel" => "stylesheet", "href" => "/css/styles.css", "type" => "text/css" }
    %body
       = partial "bar"
@@ -16,18 +18,13 @@
             #content-bgtop
                #content-bgbtm
                   %h1 Families  
-                  %table.gridtable
-                     %tr
-                     %th= nameTitle
-                     - columnTitles.each do |columnTitle|
-                        %th= columnTitle 
-                     %tbody
-                        - @systemData.each do |row|
-                           %tr
-                              %td
-                                 %a{:href=>"/families/" + row[nameField]}= row[nameField]
-                              - columnFields.each do |field|
-                                 %td= row[field]
+                  %ul
+                     - @systemData.each do |row|
+                        %li
+                           %b
+                              %a{:href=>"/families/" + row[nameField]}= row[nameField]
+                           - columnFields.each do |field|
+                              = ": #{row[field]}"
          #sidebar
             %ul
                %li
