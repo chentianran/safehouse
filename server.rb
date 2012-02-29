@@ -23,6 +23,7 @@ get '/test' do
    ARGV[0]
 end
 get '/systems/?' do
+  @families = db.queryAll(SystemsDb::FAMILY_TABLE)
   @systemData = db.queryAll(SystemsDb::SYSTEM_TABLE)
   haml :systems
 end
