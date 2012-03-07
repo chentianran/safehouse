@@ -19,9 +19,7 @@ if ARGV.count > 0
 end
 
 db = SystemsDb.new(databaseFile.strip)
-get '/test' do
-   ARGV[0]
-end
+
 get '/systems/?' do
   @families = db.queryAll(SystemsDb::FAMILY_TABLE)
   @systemData = db.queryAll(SystemsDb::SYSTEM_TABLE)
@@ -55,7 +53,7 @@ get '/families/*' do |name|
      "Page Not Found"
   else
      @systemData = db.querySystemsByFamId(family[0]["id"])
-     familyDetails = db.queryByName(SystemsDb::FAMILY_TABLE, name) 
+     fakilyDetails = db.queryByName(SystemsDb::FAMILY_TABLE, name) 
      @pageTitle = familyDetails[0]['name']
      @desc = familyDetails[0]['desc']
      haml :familyDetails

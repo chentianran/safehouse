@@ -37,6 +37,10 @@ p, ul, ol {
 	line-height: 240%;
 	text-align: justify;
 }
+p.pre
+{
+   white-space:pre-line;
+}
 
 ul, ol {
 }

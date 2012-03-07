@@ -17,13 +17,15 @@
                   %div.post
                      %h1= @pageTitle  
                      -@desc.each do |title, desc|
-                        %p= "<B>#{title}</B><BR> #{desc}" 
+                        %h2= title
+                        -# desc.gsub(/\n/, '<BR>');
+                        %p.pre~ desc
                      %div{:id=>"collapsibleBoxSection"}
                         - @collapsibleBoxVals.each do |title, body|
                            %div.collapsibleHeader{:id=>"#{title}Header","onclick"=>"switchMenu('#{title}','#{title}Header')"}
                               %h2= title
                            %div.collapsibleDiv{:id=>title}
-                              %p= body
+                              %p.pre-wrap= preserve(body)
                         -#initialize all boxes to be closed initially
                         - @collapsibleBoxVals.each do |title, body|
                            %script= "switchMenu('#{title}','#{title}Header')"
