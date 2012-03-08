@@ -14,7 +14,9 @@ ARGV.each do |filename|
       fileStr.gsub!(/^#.*$/, "")
       fileStr.gsub!(/\{.*\}/m, "")
       fileStr.gsub!(/\*/, "")
+      fileStr.gsub!(/'/, "''")
       props = fileStr.split(/\n(?=^\w*=)/)
+      print props
       props[1..-1].each do |prop|
          field,eq,value = prop.rpartition('=')
          db.set(SystemsDb::SYSTEM_TABLE, systemName, field, value)
