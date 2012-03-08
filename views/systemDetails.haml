@@ -25,7 +25,7 @@
                            %div.collapsibleHeader{:id=>"#{title}Header","onclick"=>"switchMenu('#{title}','#{title}Header')"}
                               %h2= title
                            %div.collapsibleDiv{:id=>title}
-                              %p.pre-wrap= preserve(body)
+                              %p.pre~ body
                         -#initialize all boxes to be closed initially
                         - @collapsibleBoxVals.each do |title, body|
                            %script= "switchMenu('#{title}','#{title}Header')"

@@ -15,6 +15,7 @@ class SystemViewParser
    @@cornerTableFields = [  ['dim', 'Dimension'], 
                            ['tdeg', 'Total Degree'], 
                            ['mvol', 'Mixed Volume'], 
+                           ['emvol', 'Extended Mixed Volume'], 
                            ['soln_count_c', 'Isolated solutions'], 
                            ['soln_count_r', 'Isolated real solutions'] ]
 

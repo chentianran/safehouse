@@ -4,20 +4,31 @@ class SystemsDb
    :db
    SYSTEM_TABLE = "systems" 
    FAMILY_TABLE = "families"  
+
    
    SYSTEM_FIELDS =  <<-fieldStr
                         name text PRIMARY KEY, 
                         longname text, 
                         tdeg integer, 
                         mvol text, 
+                        emvol text,
                         desc text, 
                         family_id text, 
                         eq_sym text, 
                         eq_lee text, 
+                        eq_hps text,
                         ref text, 
+                        soln_count_c integer, 
+                        soln_count_r integer, 
+                        
                         soln_c integer, 
                         soln_r integer, 
-                        posdim integer
+
+                        comp integer,
+                        open integer,
+
+                        posdim integer,
+                        dim integer
                       fieldStr
 
    FAMILY_FIELDS = <<-fieldStr
@@ -63,6 +74,9 @@ class SystemsDb
       return rows
    end   
 
+   def endTrans()
+      @db.commit()
+   end
    #returns all systems that are in the family with id 'famId'
    def querySystemsByFamId(famId)
       return querySystem("#{SYSTEM_TABLE}.family_id = '#{famId}'")
@@ -143,6 +157,7 @@ class SystemsDb
       end
       @db.transaction()
       @db.execute("update #{table} set #{field} = '#{value}' where name = '#{name}'")
+#      print "update #{table} set #{field} = '#{value}' where name = '#{name}'"
       @db.commit()
    end
   
