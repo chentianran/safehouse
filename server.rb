@@ -33,6 +33,9 @@ get '/systems/*' do |name|
   if @systemDetails.count == 0
      "Page Not Found"
   else
+     if @systemDetails[0]['ref'] == nil
+         @systemDetails[0]['ref'] = @systemDetails[0]['familyref']   
+     end
      rp =SystemViewParser.new(@systemDetails[0])
      @pageTitle = rp.getTitle()
      @tableValues = rp.getCornerTableData()
@@ -55,7 +58,7 @@ get '/families/*' do |name|
      "Page Not Found"
   else
      @systemData = db.querySystemsByFamId(family[0]["id"])
-     fakilyDetails = db.queryByName(SystemsDb::FAMILY_TABLE, name) 
+     familyDetails = db.queryByName(SystemsDb::FAMILY_TABLE, name) 
      @pageTitle = familyDetails[0]['name']
      @desc = familyDetails[0]['desc']
      haml :familyDetails

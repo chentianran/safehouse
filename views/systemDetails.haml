@@ -29,7 +29,7 @@
                                  %p.pre
                                     -#="`#{body}`"
                                     -body.lines do |line|
-                                       ="$$#{line.strip}$$"   
+                                       = "$$ #{line} $$"
                               -else
                                  %p.pre~ body
                         -#initialize all boxes to be closed initially

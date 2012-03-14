@@ -114,6 +114,20 @@ when "set"
       end
    end
 
+when "setW"
+   name = ARGV[1]
+   field,value = ARGV[2].split('=')
+   if db.columns(table).include?(field.strip) or field == 'familyname'
+      db.set(table, name, field, value)
+   else
+      print "Unknown field: ", field, "\n\n"
+      print "Valid fields: ", "\n"
+      db.columns(table).each do |column|
+         print column, "\n"
+      end
+   end
+
+
 else
    print "Unknown subcommand\n"
    print SystemsCli.helpString()

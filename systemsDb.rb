@@ -34,7 +34,9 @@ class SystemsDb
    FAMILY_FIELDS = <<-fieldStr
                      id integer PRIMARY KEY AUTOINCREMENT, 
                      name text, 
-                     desc text
+                     longname text,
+                     desc text,
+                     refs
                    fieldStr
 
    #opens the db residing in filename and initializes the class
@@ -90,7 +92,8 @@ class SystemsDb
       rows = @db.execute( <<-SQL_STATEMENT)
          SELECT #{SYSTEM_TABLE}.* , 
                 #{FAMILY_TABLE}.name AS familyname, 
-                #{FAMILY_TABLE}.desc AS familydesc
+                #{FAMILY_TABLE}.desc AS familydesc,
+                #{FAMILY_TABLE}.ref AS familyref
          FROM #{SYSTEM_TABLE}
          LEFT JOIN #{FAMILY_TABLE} 
          ON  #{SYSTEM_TABLE}.family_id=#{FAMILY_TABLE}.id
@@ -162,6 +165,27 @@ class SystemsDb
       @db.commit()
    end
   
+   #sets a field of a family or system
+   #special field familyname in system is used to link a system to a family 
+   # by specifying the name, rather than the family_id
+   def setWithWildcard(table, name, field, value)
+      if field == 'familyname'
+         field = 'family_id'
+         family = queryFamilyByName(value)
+         if family.count == 0
+            add(FAMILY_TABLE, value)
+            family = queryFamilyByName(value)
+         end
+         value = family[0]['id']
+      end
+      value = value.to_s().gsub(/'/,"''")
+
+      @db.transaction()
+      @db.execute("update #{table} set #{field} like '#{value}' where name = '#{name}'")
+      @db.commit()
+   end
+
+
    def deleteByName(table, name)
       @db.transaction()
       @db.execute("delete from #{table} WHERE name='#{name}'")

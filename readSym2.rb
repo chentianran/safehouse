@@ -7,7 +7,7 @@ end
 ARGV.each do |filename|
    begin
       systemName = filename.match(/(\w*)\.sym2$/ )[1]
-      db.add(SystemsDb::SYSTEM_TABLE, systemName)
+      #db.add(SystemsDb::SYSTEM_TABLE, systemName)
       f = File.new(filename)
       fileStr = f.read()
       f.close 
