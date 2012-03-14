@@ -89,6 +89,13 @@ when "delete"
    name = ARGV[1]
    db.deleteByName(table, name)
 
+when "filter"
+   column = ARGV[1]
+   regex = ARGV[2]
+   replacement = ARGV[3]
+   db.filter(table,column, regex, replacement)
+
+
 when "addcolumn"
    name = ARGV[1]
    type = ARGV[2]

@@ -120,7 +120,7 @@ hr {
 }
 
 #menu li {
-	display: block;
+   display: block;
 	float: left;
 	background: url(/images/img02.jpg) no-repeat right 10px;
 }
@@ -275,6 +275,7 @@ hr {
 #content div.collapsibleDiv {
 	border:1px solid #ccc;
    text-align: center;
+   overflow:auto;
 }
 
 
@@ -406,7 +407,7 @@ hr {
 	margin: 0 0 10px 0px;
 	padding: 4px 0px 0px 20px;
 	background: url(/images/img03.jpg) no-repeat left top;
-	letter-spacing: -1px;
+	/*letter-spacing: -1px;*/
    font-family:Impact, Charcoal, sans-serif; 
 	font-size: 18px;
 	font-weight: normal;

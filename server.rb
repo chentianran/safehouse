@@ -4,6 +4,7 @@ require 'haml'
 require 'systemsDb'
 require 'resultParser'
 require 'systemViewParser'
+require 'filter'
 
 helpers do
   def partial( page, variables={} )
@@ -28,6 +29,7 @@ end
 
 get '/systems/*' do |name|
   @systemDetails = db.queryByName(SystemsDb::SYSTEM_TABLE, name) 
+  filterExpAndSub(@systemDetails)
   if @systemDetails.count == 0
      "Page Not Found"
   else

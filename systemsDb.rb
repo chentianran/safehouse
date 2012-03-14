@@ -155,9 +155,10 @@ class SystemsDb
          end
          value = family[0]['id']
       end
+      value = value.to_s().gsub(/'/,"''")
+
       @db.transaction()
       @db.execute("update #{table} set #{field} = '#{value}' where name = '#{name}'")
-#      print "update #{table} set #{field} = '#{value}' where name = '#{name}'"
       @db.commit()
    end
   
@@ -187,6 +188,25 @@ class SystemsDb
       stmt = @db.prepare("select * from #{table}")
       return stmt.columns
    end
+
+   def filter(table, column, regex, replacement)
+      systems = queryAll(table)
+      systems.each do |system|
+         begin
+            if system[column]!=nil
+               system["desc"].gsub!(regex,replacement)
+               set(table, system["name"], column, system[column])
+            end
+         rescue => e
+            print "failed on #{system["name"]}\n"
+            print e
+            print "\n"
+            endTrans()
+         end
+
+      end
+   end
+
 
 end
 
