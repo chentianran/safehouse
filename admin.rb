@@ -13,6 +13,7 @@ class SystemsCli
        " admin.rb query [options]\n" +
        " admin.rb set NAME FIELD=VALUE\n" +
        " admin.rb addcolumn NAME TYPE\n"
+       " admin.rb replace COLUMN REGEX REPLACEMENT\n"
        " admin.rb listfamilies\n"
    end
 
@@ -89,11 +90,11 @@ when "delete"
    name = ARGV[1]
    db.deleteByName(table, name)
 
-when "filter"
+when "replace"
    column = ARGV[1]
    regex = ARGV[2]
    replacement = ARGV[3]
-   db.filter(table,column, regex, replacement)
+   db.replace(table,column, regex, replacement)
 
 
 when "addcolumn"
@@ -113,20 +114,6 @@ when "set"
          print column, "\n"
       end
    end
-
-when "setW"
-   name = ARGV[1]
-   field,value = ARGV[2].split('=')
-   if db.columns(table).include?(field.strip) or field == 'familyname'
-      db.set(table, name, field, value)
-   else
-      print "Unknown field: ", field, "\n\n"
-      print "Valid fields: ", "\n"
-      db.columns(table).each do |column|
-         print column, "\n"
-      end
-   end
-
 
 else
    print "Unknown subcommand\n"

@@ -164,27 +164,7 @@ class SystemsDb
       @db.execute("update #{table} set #{field} = '#{value}' where name = '#{name}'")
       @db.commit()
    end
-  
-   #sets a field of a family or system
-   #special field familyname in system is used to link a system to a family 
-   # by specifying the name, rather than the family_id
-   def setWithWildcard(table, name, field, value)
-      if field == 'familyname'
-         field = 'family_id'
-         family = queryFamilyByName(value)
-         if family.count == 0
-            add(FAMILY_TABLE, value)
-            family = queryFamilyByName(value)
-         end
-         value = family[0]['id']
-      end
-      value = value.to_s().gsub(/'/,"''")
-
-      @db.transaction()
-      @db.execute("update #{table} set #{field} like '#{value}' where name = '#{name}'")
-      @db.commit()
-   end
-
+ 
 
    def deleteByName(table, name)
       @db.transaction()
@@ -213,7 +193,7 @@ class SystemsDb
       return stmt.columns
    end
 
-   def filter(table, column, regex, replacement)
+   def replace(table, column, regex, replacement)
       systems = queryAll(table)
       systems.each do |system|
          begin
