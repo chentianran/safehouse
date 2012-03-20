@@ -25,6 +25,8 @@
                   %div.post
                      %h1 Systems of Equations
                      = partial "systemsTable", {:nameDesc => @systemData, :type=>'systems'} 
+                     - (1 .. 10).each do |n|
+                        %a{:href=>url("/systems?page=#{n}")}= n
          #sidebar
             %ul
                %li

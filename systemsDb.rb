@@ -84,8 +84,10 @@ class SystemsDb
       return querySystem("#{SYSTEM_TABLE}.family_id = '#{famId}'")
    end   
 
-   #returns all systeme for which condition is true
-   def querySystem( condition )
+   #returns systems for which condition is true
+   #limit is the number of results to return
+   #offset is the number of results to skip before returning the next limit rows
+   def querySystem( condition, limit = -1, offset = 0 )
       @db.transaction()
       #statement returns all of the columns in system, as well as the name and
       # description of the table associated with it
@@ -98,6 +100,8 @@ class SystemsDb
          LEFT JOIN #{FAMILY_TABLE} 
          ON  #{SYSTEM_TABLE}.family_id=#{FAMILY_TABLE}.id
          WHERE #{condition} 
+         LIMIT #{limit}
+         OFFSET #{offset}
       SQL_STATEMENT
       @db.commit()
       return rows
@@ -111,9 +115,9 @@ class SystemsDb
    end   
 
    #returns all families or systems, depending on the table parameter
-   def queryAll(table)
+   def queryAll(table, limit = -1, offset = 0)
       if(table == SYSTEM_TABLE)
-         return querySystem("1")
+         return querySystem("1", limit, offset)
       else
          return queryAllFamily()
       end
@@ -193,6 +197,8 @@ class SystemsDb
       return stmt.columns
    end
 
+   #searches through all desc fields for regex and replaces the regex with 
+   #replacement
    def replace(table, column, regex, replacement)
       systems = queryAll(table)
       systems.each do |system|

@@ -21,9 +21,16 @@ end
 
 db = SystemsDb.new(databaseFile.strip)
 
-get '/systems/?' do
+resultsPerPage = 10
+
+get '/system' do
+  redirect '/systems?page=1'
+end
+
+get '/systems' do
+   page = params[:page].to_i
   @families = db.queryAll(SystemsDb::FAMILY_TABLE)
-  @systemData = db.queryAll(SystemsDb::SYSTEM_TABLE)
+  @systemData = db.queryAll(SystemsDb::SYSTEM_TABLE, resultsPerPage,(page - 1) * resultsPerPage)
   haml :systems
 end
 
