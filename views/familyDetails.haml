@@ -3,15 +3,22 @@
    %head
       %title Family Details
       %meta{ "http-equiv" => "Content-Type", :content => "text/html; charset=utf-8"}
+      %link{"rel"=>"stylesheet", "href"=>"http://fonts.googleapis.com/css?family=Playfair+Display", "type"=>"text/css"}
       %link{"rel" => "stylesheet", "href" => "/css/styles.css", "type" => "text/css" }   
    %body
       = partial "bar"
-      %div{:id=>"main"}
-         #header
-            %h1=  @pageTitle + " Details"
-         %p.desc= @desc
-         %p= "Members: "             
-         %ul
-         - @systems.each do |system|
-            %li
-               %a{:href=>"/systems/" + system["name"]}= system["name"]
+      #page
+         #content
+            #content-bgtop
+               #content-bgbtm
+                  %h1=  @pageTitle
+                  %p.desc= @desc
+                  %h2= "Members: "             
+                  = partial "systemsTable", {:nameDesc => @systemData, :type=>'systems'}
+         #sidebar
+            %ul
+               %li
+                  %h2 Properties
+                  %ul
+                     %li filler
+                        

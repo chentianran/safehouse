@@ -1,29 +1,45 @@
 !!!
-- #edit these arrays to change the columns displayed. No ordered hash in 1.8, so 2 arrays work 
-- nameTitle = "Name"
-- nameField = "name"
-- columnTitles = Array[ "Full Name", "Family", "Desc."] #what should be displayed 
-- columnFields = Array[ "longname", "familyname", "desc" ] #what the columns are named in the sql database  
 %html{ :xmlns => "http://www.w3.org/1999/xhtml", :lang => "en", "xml:lang" => "en" }
    %head
       %title Systems of Equations
       %meta{ "http-equiv" => "Content-Type", :content => "text/html; charset=utf-8"}
       %link{"rel" => "stylesheet", "href" => "/css/styles.css", "type" => "text/css" }
+      %script{ :type=>"text/x-mathjax-config"}
+         MathJax.Hub.Config({
+         extensions: ["tex2jax.js"],
+         jax: ["input/TeX", "output/HTML-CSS"],
+         tex2jax: {
+         inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+         displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+         },
+         });
+      %script{"src" => "https://d3eoax9i5htok0.cloudfront.net/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML", "type"=>"text/javascript"}
+   %link{"rel"=>"stylesheet", "href"=>"http://fonts.googleapis.com/css?family=Playfair+Display", "type"=>"text/css"}
    %body
       = partial "bar"
-      %div{:id=>"main"}
-         #header
-            %h1 Systems of Equations
-         %table.gridtable
-            %tr
-            %th= nameTitle
-            - columnTitles.each do |columnTitle|
-               %th= columnTitle 
-            %tbody
-               - @systemData.each do |row|
-                  %tr
-                     %td
-                        %a{:href=>"/systems/" + row[nameField]}= row[nameField]
-                     - columnFields.each do |field|
-                        %td= row[field]
-                    
+      #page
+         #content
+            #content-bgtop
+               #content-bgbtm
+                  %div.post
+                     %h1 Systems of Equations
+                     = partial "systemsTable", {:nameDesc => @systemData, :type=>'systems'} 
+                     
+                     -if @page > 1
+                        %a{:href=>url("/systems?page=#{@page-1}")}= "prev"
+                     -([1, @page-3].max .. [3+@page,@pages].min).each do |n|
+                        -if @page != n
+                           %a{:href=>url("/systems?page=#{n}")}= n
+                        -else
+                           ="<B>#{n}</B>"
+                     -if @page < @pages
+                        %a{:href=>url("/systems?page=#{@page+1}")}= "next"
+         #sidebar
+            %ul
+               %li
+                  %h2 
+                     %a{:href=>url("/families/")}Families                 
+                  %ul
+                     -@families.each do |family|           
+                        %li
+                           %a{:href=>url("/families/#{family['name']}")}= family['name']                

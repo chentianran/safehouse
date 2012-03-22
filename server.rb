@@ -4,6 +4,7 @@ require 'haml'
 require 'systemsDb'
 require 'resultParser'
 require 'systemViewParser'
+require 'filter'
 
 helpers do
   def partial( page, variables={} )
@@ -19,21 +20,35 @@ if ARGV.count > 0
 end
 
 db = SystemsDb.new(databaseFile.strip)
-get '/test' do
-   ARGV[0]
-end
+
+resultsPerPage = 10
+
+
 get '/systems/?' do
-  @systemData = db.queryAll(SystemsDb::SYSTEMS_TABLE)
+   if params[:page] != nil
+      @page = params[:page].to_i
+   else
+      @page = 1
+   end
+   @pages = db.queryAll(SystemsDb::SYSTEM_TABLE).length / resultsPerPage
+
+
+   @families = db.queryAll(SystemsDb::FAMILY_TABLE)
+  @systemData = db.queryAll(SystemsDb::SYSTEM_TABLE, resultsPerPage,(@page - 1) * resultsPerPage)
   haml :systems
 end
 
 get '/systems/*' do |name|
-  @systemDetails = db.queryName(SystemsDb::SYSTEMS_TABLE, name) 
+  @systemDetails = db.queryByName(SystemsDb::SYSTEM_TABLE, name) 
+  filterExpAndSub(@systemDetails)
   if @systemDetails.count == 0
      "Page Not Found"
   else
+     if @systemDetails[0]['ref'] == nil
+         @systemDetails[0]['ref'] = @systemDetails[0]['familyref']   
+     end
      rp =SystemViewParser.new(@systemDetails[0])
-     @pageTitle = rp.getTitle().capitalize
+     @pageTitle = rp.getTitle()
      @tableValues = rp.getCornerTableData()
      @desc = rp.getDescriptions()
      @family = @systemDetails[0]['familyname']
@@ -44,27 +59,20 @@ get '/systems/*' do |name|
 end
 
 get '/families/?' do
-  @tableColumns = db.fields(SystemsDb::FAMILY_TABLE)
-  @systemData = db.queryAll(SystemsDb::FAMILY_TABLE)
+  @familyData= db.queryAll(SystemsDb::FAMILY_TABLE)
   haml :families
 end
 
 get '/families/*' do |name|
-  family = db.queryName(SystemsDb::FAMILY_TABLE, name)
+  family = db.queryByName(SystemsDb::FAMILY_TABLE, name)
   if family.count == 0 
      "Page Not Found"
   else
-     @systems = db.queryFamilyMembers(family[0]["id"])
-     familyDetails = db.queryName(SystemsDb::FAMILY_TABLE, name) 
-     @pageTitle = familyDetails[0]['name'].capitalize
+     @systemData = db.querySystemsByFamId(family[0]["id"])
+     familyDetails = db.queryByName(SystemsDb::FAMILY_TABLE, name) 
+     @pageTitle = familyDetails[0]['name']
      @desc = familyDetails[0]['desc']
      haml :familyDetails
   end
-end
-
-get '/partial' do 
-   @tableColumns = db.fields(SystemsDb::FAMILY_TABLE)
-   @systemData = db.queryAll(SystemsDb::FAMILY_TABLE)
-   haml :testPartial1
 end
 

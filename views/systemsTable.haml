@@ -1,0 +1,17 @@
+%table.gridtable
+   %tr
+      %th Name
+      %th Description
+   %tbody
+      - nameDesc.each do |row|
+         %tr
+            %td
+               -if type == 'systems'
+                  %a{:href=>url("/systems/#{row['name']}")} 
+                     -if row['longname']!=nil
+                        =row['longname']
+                     - else 
+                        =row['name']
+               -elsif type == 'families'
+                  %a{:href=>url("/families/#{row['name']}")}= row['name'] 
+            %td= row['desc']

@@ -6,6 +6,6 @@ ans.strip!
 ans.downcase!
 if ans == "y"
   db = SystemsDb.new(ARGV[0]) 
-  db.dropTable(SystemsDb::POLY_SYS_TABLE)
+  db.dropTable(SystemsDb::SYSTEM_TABLE)
   db.dropTable(SystemsDb::FAMILY_TABLE)
 end  

@@ -3,38 +3,66 @@
    %head
       %title Polynomial System Details
       %meta{ "http-equiv" => "Content-Type", :content => "text/html; charset=utf-8"}
-      %link{"rel" => "stylesheet", "href" => "/css/styles.css", "type" => "text/css" }   
+      %link{"rel" => "stylesheet", "href" => "/css/styles.css", "type" => "text/css", "media"=>"screen"}   
+      %link{"rel"=>"stylesheet", "href"=>"http://fonts.googleapis.com/css?family=Playfair+Display", "type"=>"text/css"}
+    
       %script{"src" => "/js/toggleDiv.js", "type"=>"text/javascript"}
+      %script{ :type=>"text/x-mathjax-config"}
+         MathJax.Hub.Config({
+         extensions: ["tex2jax.js"],
+         jax: ["input/TeX", "output/HTML-CSS"],
+         tex2jax: {
+         inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+         displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+         },
+         });
+      %script{"src" => "https://d3eoax9i5htok0.cloudfront.net/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML", "type"=>"text/javascript"}
    %body
       = partial "bar"
-      %div{:id=>"main"}
-         #header
-            %h1= @pageTitle + " Details"
-         %table.detailstable
-            %tbody
-               %tr 
-                  %th="Field" 
-                  %th="Data"
-               %tr 
-                  %td
-                     %a{:href=>url("/families/")} Family 
-                  %td
-                     -if @family != nil
-                        %a{:href=>url("/families/"+@family)}= @family
-               - @tableValues.each do |title, body|
-                  %tr
-                     %td= title
-                     %td= body
-               - @fullRowValues.each do |value|
-                  %tr
-                     %td= value
-         %a= "<B>Family Description:</B> <BR> #{@familyDesc} <BR><BR><B>System Description:</B><BR> #{@desc}"      
-         %div{:id=>"collapsibleBoxSection"}
-            - @collapsibleBoxVals.each do |title, body|
-               %div.collapsibleHeader{"onclick"=>"switchMenu('#{title}')"}
-                  %a= title
-               %div.collapsibleDiv{:id=>title}
-                  %a= body
-            -#initialize all boxes to be closed initially
-            - @collapsibleBoxVals.each do |title, body|
-               %script= "switchMenu('#{title}')"
+      #page
+         #content
+            #content-bgtop
+               #content-bgbtm
+                  %div.post
+                     %h1= @pageTitle  
+                     -@desc.each do |title, desc|
+                        %h2= title
+                        -# desc.gsub(/\n/, '<BR>');
+                        %p.pre~ desc
+                     %div{:id=>"collapsibleBoxSection"}
+                        - @collapsibleBoxVals.each do |title, body|
+                           %div.collapsibleHeader{:id=>"#{title}Header","onclick"=>"switchMenu('#{title}','#{title}Header')"}
+                              %h2= title
+                           %div.collapsibleDiv{:id=>title}
+                              -if title == "Equations"
+                                 %p.pre
+                                    -#="`#{body}`"
+                                    -body.lines do |line|
+                                       = "$$ #{line} $$"
+                              -else
+                                 %p.pre~ body
+                        -#initialize all boxes to be closed initially
+                        - @collapsibleBoxVals.each do |title, body|
+                           %script= "switchMenu('#{title}','#{title}Header')"
+                        %script= "switchMenu('Reference','ReferenceHeader')"
+                        %script= "switchMenu('Equations','EquationsHeader')"
+         #sidebar
+            %ul
+               %li
+                  %h2 Properties
+                  -if @family != nil
+                     %ul
+                        %li
+                           %p
+                              %b= "Family: "
+                              %a{:href=>url("/families/"+@family)}= @family
+                  - @tableValues.each do |title, body|
+                     %ul
+                        %li
+                           %p
+                              %b="#{title}: " 
+                              =body
+                  - @fullRowValues.each do |value|
+                     %ul
+                        %li.bool= value
+
