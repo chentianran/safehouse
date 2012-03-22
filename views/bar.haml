@@ -7,4 +7,8 @@
             %a{:href=>url("/families/")} Families
          %li
             %a About
-%hr
+   #search
+      %form{:method=>"get", :action=>""}
+         %fieldset
+            %input{:type=>"text",:name=>"s", :id=>"search-text", :size=>"15"}
+

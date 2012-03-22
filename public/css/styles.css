@@ -103,6 +103,7 @@ hr {
 	padding-top: 10px;
 }
 
+
 /* Menu */
 
 #menu {
@@ -291,6 +292,7 @@ hr {
 
 
 
+
 /* Post */
 
 .post {
@@ -346,6 +348,9 @@ hr {
 	text-decoration: none;
 	font-weight: bold;
 	color: #FFFFFF;
+}
+#pageBar {
+   text-align: center;
 }
 
 /* Sidebar */
