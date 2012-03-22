@@ -33,7 +33,7 @@ get '/systems/?' do
    @pages = db.queryAll(SystemsDb::SYSTEM_TABLE).length / resultsPerPage
 
 
-   @families = db.queryAll(SystemsDb::FAMILY_TABLE)
+  @families = db.queryAll(SystemsDb::FAMILY_TABLE)
   @systemData = db.queryAll(SystemsDb::SYSTEM_TABLE, resultsPerPage,(@page - 1) * resultsPerPage)
   haml :systems
 end
