@@ -25,7 +25,7 @@ resultsPerPage = 5
 
 get '/search/?' do
    if params["s"] != nil   
-      @systemData = db.queryByName( SystemsDb::SYSTEM_TABLE, params["s"]) 
+      @systemData = db.search( params["s"]) 
       if @systemData == nil
          "No Results Found"
       end

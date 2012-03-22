@@ -217,6 +217,28 @@ class SystemsDb
       end
    end
 
+   def search(searchTerm, limit = -1, offset = 0 )
+      @db.transaction()
+      
+      rows =@db.execute(<<-SQL_STATEMENT)
+         SELECT #{SYSTEM_TABLE}.name, 
+                #{SYSTEM_TABLE}.desc
+         FROM #{SYSTEM_TABLE}
+         WHERE desc like '%#{searchTerm}%' 
+               OR name like '%#{searchTerm}%'
+         UNION ALL
+         SELECT #{FAMILY_TABLE}.name, 
+                #{FAMILY_TABLE}.desc 
+         FROM #{FAMILY_TABLE}
+         WHERE desc like '%#{searchTerm}%' 
+               OR name like '%#{searchTerm}%'
+         LIMIT #{limit}
+         OFFSET #{offset}
+      SQL_STATEMENT
+      @db.commit()
+      return rows
+
+   end
 
 end
 
