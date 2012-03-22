@@ -24,16 +24,7 @@
                   %div.post
                      %h1 Systems of Equations
                      = partial "systemsTable", {:nameDesc => @systemData, :type=>'systems'} 
-                  #pageBar   
-                     -if @page > 1
-                        %a{:href=>url("/systems?page=#{@page-1}")}= "&lt prev"
-                     -([1, @page-5].max .. [5+@page,@pages].min).each do |n|
-                        -if @page != n
-                           %a{:href=>url("/systems?page=#{n}")}= n
-                        -else
-                           ="<B>#{n}</B>"
-                     -if @page < @pages
-                        %a{:href=>url("/systems?page=#{@page+1}")}= "next &gt"
+                     = partial "pageBar", {:page=> @page, :pages => @pages, :path => @request.path_info}
          #sidebar
             %ul
                %li

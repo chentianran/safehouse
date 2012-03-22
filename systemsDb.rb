@@ -119,14 +119,14 @@ class SystemsDb
       if(table == SYSTEM_TABLE)
          return querySystem("1", limit, offset)
       else
-         return queryAllFamily()
+         return queryAllFamily(limit, offset)
       end
    end
 
    #return all families in the family table
-   def queryAllFamily()
+   def queryAllFamily( limit = -1, offset = 0 )
       @db.transaction()
-      rows = @db.execute("SELECT * FROM #{FAMILY_TABLE}")
+      rows = @db.execute("SELECT * FROM #{FAMILY_TABLE} LIMIT #{limit} OFFSET #{offset} ")
       @db.commit()
       return rows
    end   

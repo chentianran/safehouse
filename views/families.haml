@@ -19,6 +19,8 @@
                #content-bgbtm
                   %h1 Families  
                   = partial "systemsTable", {:nameDesc => @familyData, :type=>'families'}       
+                  = partial "pageBar", {:page=> @page, :pages => @pages, :path => @request.path_info}
+ 
          #sidebar
             %ul
                %li
