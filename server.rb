@@ -34,7 +34,9 @@ end
 
 db = SystemsDb.new(databaseFile.strip)
 
-resultsPerPage = 5 
+resultsPerPage = 20
+
+
 
 get '/search/?' do
    if params[:page] != nil
@@ -66,9 +68,9 @@ get '/systems/?' do
       @page = 1
    end
    @pages = (db.queryAll(SystemsDb::SYSTEM_TABLE).length + resultsPerPage-1) / resultsPerPage #round up
-  @systemData = db.queryAll(SystemsDb::SYSTEM_TABLE, resultsPerPage,(@page - 1) * resultsPerPage)
-  @families = db.queryAll(SystemsDb::FAMILY_TABLE,resultsPerPage)
-  haml :systems
+   @systemData = db.queryAll(SystemsDb::SYSTEM_TABLE, resultsPerPage,(@page - 1) * resultsPerPage)
+   @families = db.queryAll(SystemsDb::FAMILY_TABLE,resultsPerPage)
+   haml :systems
 end
 
 get '/systems/*' do |name|
@@ -97,11 +99,17 @@ get '/families/?' do
    else
       @page = 1
    end
-   @pages = (db.queryAll(SystemsDb::FAMILY_TABLE).length + resultsPerPage-1) / resultsPerPage #round up
+   if params[:firstletter] != nil
+      firstLetter = params[:firstletter]
+      @pages = (db.queryByFirstLetter(SystemsDb::FAMILY_TABLE, firstLetter).length + resultsPerPage-1) / resultsPerPage #round up
+      @familyData = db.queryByFirstLetter(SystemsDb::FAMILY_TABLE, firstLetter, resultsPerPage,(@page - 1) * resultsPerPage)
+   else
+      @pages = (db.queryAll(SystemsDb::FAMILY_TABLE).length + resultsPerPage-1) / resultsPerPage #round up
+      @familyData= db.queryAll(SystemsDb::FAMILY_TABLE, resultsPerPage,(@page - 1) * resultsPerPage)
+   end
 
-   @familyData= db.queryAll(SystemsDb::FAMILY_TABLE, resultsPerPage,(@page - 1) * resultsPerPage)
 
-  haml :families
+     haml :families
 end
 
 get '/families/*' do |name|

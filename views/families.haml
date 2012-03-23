@@ -19,12 +19,15 @@
                #content-bgbtm
                   %h1 Families  
                   = partial "systemsTable", {:nameDesc => @familyData, :type=>'families'}       
-                  = partial "pageBar", {:page=> @page, :pages => @pages, :path => @request.path_info}
+                  = partial "pageBar", {:page=> @page, :pages => @pages, :path => @request.fullpath}
  
          #sidebar
             %ul
                %li
-                  %h2 Properties
+                  %h2 Filter
                   %ul
-                     %li filler
- 
+                     - [ ('A' .. 'G'), ('H' .. 'N'), ('O' .. 'U'), ('V'.. 'Z')].each do |range|
+                        -range.each do |c|
+                           %a{:href=>"#{url(request.path)}?firstletter=#{c}"}= "#{c} "
+                        %BR
+                     %a{:href=>"#{url(request.path)}?firstletter="}

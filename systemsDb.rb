@@ -106,7 +106,6 @@ class SystemsDb
       @db.commit()
       return rows
    end
-
    def queryFamilyById(famId)
       @db.transaction()
       rows = @db.execute("select * from #{FAMILY_TABLE} where family_id = '#{famId}'")
@@ -215,6 +214,23 @@ class SystemsDb
          end
 
       end
+   end
+
+
+   def queryByFirstLetter(table, letter, limit = -1, offset = 0 )
+      @db.transaction()
+      
+      rows =@db.execute(<<-SQL_STATEMENT)
+         SELECT #{table}.name, 
+                #{table}.desc
+         FROM #{table}
+         WHERE name like '#{letter}%'
+         LIMIT #{limit}
+         OFFSET #{offset}
+      SQL_STATEMENT
+      @db.commit()
+      return rows
+
    end
 
    def search(searchTerm, limit = -1, offset = 0 )
