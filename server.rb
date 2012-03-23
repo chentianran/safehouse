@@ -36,6 +36,13 @@ db = SystemsDb.new(databaseFile.strip)
 
 resultsPerPage = 20
 
+get '/add/system/?' do
+   haml :addSystem
+end
+
+post '/add/system/?' do
+   params[:name]
+end
 
 
 get '/search/?' do
