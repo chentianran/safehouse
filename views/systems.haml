@@ -24,7 +24,7 @@
                   %div.post
                      %h1 Systems of Equations
                      = partial "systemsTable", {:nameDesc => @systemData, :type=>'systems'} 
-                     = partial "pageBar", {:page=> @page, :pages => @pages, :path => @request.path_info}
+                     = partial "pageBar", {:page=> @page, :pages => @pages, :path => @request.fullpath}
          #sidebar
             %ul
                %li

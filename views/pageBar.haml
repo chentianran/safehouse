@@ -1,11 +1,13 @@
 #pageBar   
    -if page > 1
-      %a{:href=>url("#{path}?page=#{page-1}")}= "&lt prev"
+      -urlStr = setPageNum(url("#{path}"), page-1) 
+      %a{:href=>urlStr}= "&lt prev"
    -([1, page-5].max .. [5+page,pages].min).each do |n|
       -if page != n
-         %a{:href=>url("#{path}?page=#{n}")}= n
+         -urlStr = setPageNum(url("#{path}"), n) 
+         %a{:href=>urlStr}= n
       -else
          ="<B>#{n}</B>"
    -if page < pages
-      %a{:href=>url("#{path}?page=#{page+1}")}= "next &gt"
-
+      -urlStr = setPageNum(url("#{path}"), page+1) 
+      %a{:href=>urlStr}= "next &gt"
