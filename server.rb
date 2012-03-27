@@ -34,7 +34,7 @@ end
 
 db = SystemsDb.new(databaseFile.strip)
 
-resultsPerPage = 5 
+resultsPerPage = 30 
 
 get '/search/?' do
    if params[:page] != nil

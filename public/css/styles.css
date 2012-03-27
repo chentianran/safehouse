@@ -39,6 +39,7 @@ p, ul, ol {
 }
 p.pre
 {
+   line-height: normal;
    white-space:pre-line;
 }
 
