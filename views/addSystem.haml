@@ -2,10 +2,11 @@
    %form{:method=>"post", :action=>""}
       %fieldset
          %legend Add System
-         Name
-         %input{:type=>"text",:name=>"name", :id=>"system-name", :size=>"15"}
-         tdeg 
-         %input{:type=>"text",:name=>"tdeg", :id=>"tdeg", :size=>"15"}
+         -fields = ['name', 'tdeg', 'mvol']
+         -for field in fields
+            ="#{field}"
+            %input{:type=>"text",:name=>field, :id=>field, :size=>"15"}
+            %BR
          %input{:type=>"submit",  :value=>"Submit"} 
 
 

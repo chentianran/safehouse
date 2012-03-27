@@ -41,7 +41,17 @@ get '/add/system/?' do
 end
 
 post '/add/system/?' do
-   params[:name]
+   name = params[:name]
+   params.delete(:name)
+   begin
+      db.add(SystemsDb::SYSTEM_TABLE, name)
+   rescue
+      db.endTrans()
+   end
+   params.each do |field, value|
+      db.set(SystemsDb::SYSTEM_TABLE,name, field, value)
+   end
+   redirect "/systems/#{name}"
 end
 
 
