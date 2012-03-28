@@ -6,30 +6,30 @@ class SystemsDb
    FAMILY_TABLE = "families"  
 
    
-   SYSTEM_FIELDS =  <<-fieldStr
-                        name text PRIMARY KEY, 
-                        longname text, 
-                        tdeg integer, 
-                        mvol text, 
-                        emvol text,
-                        desc text, 
-                        family_id text, 
-                        eq_sym text, 
-                        eq_lee text, 
-                        eq_hps text,
-                        ref text, 
-                        soln_count_c integer, 
-                        soln_count_r integer, 
-                        
-                        soln_c integer, 
-                        soln_r integer, 
+   SYSTEM_FIELDS = <<-fieldStr
+                     name text PRIMARY KEY, 
+                     longname text, 
+                     tdeg integer, 
+                     mvol text, 
+                     emvol text,
+                     desc text, 
+                     family_id text, 
+                     eq_sym text, 
+                     eq_lee text, 
+                     eq_hps text,
+                     ref text, 
+                     soln_count_c integer, 
+                     soln_count_r integer, 
+                     
+                     soln_c integer, 
+                     soln_r integer, 
 
-                        comp integer,
-                        open integer,
+                     comp integer,
+                     open integer,
 
-                        posdim integer,
-                        dim integer
-                      fieldStr
+                     posdim integer,
+                     dim integer
+                   fieldStr
 
    FAMILY_FIELDS = <<-fieldStr
                      id integer PRIMARY KEY AUTOINCREMENT, 

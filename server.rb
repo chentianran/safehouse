@@ -15,10 +15,12 @@ enable :sessions
 
 
 helpers do
+   #render a partial haml page
    def partial( page, variables={} )
       haml page.to_sym, {layout=>false}, variables
    end
 
+   #change the page parameter in a url
    def setPageNum( urlStr, page)
       if urlStr.sub!(/page=\d*/, "page=#{page}") == nil 
          if urlStr.include? '?' 
@@ -30,11 +32,14 @@ helpers do
          return urlStr
       end
    end
+
+   #used for openid    
    def openid_consumer
       @openid_consumer ||= OpenID::Consumer.new(session,
        OpenID::Store::Filesystem.new("#{File.dirname(__FILE__)}/tmp/openid"))  
    end
 
+   #used for openid
    def root_url
       request.url.match(/(^.*\/{2}[^\/]*)/)[1]
    end
@@ -51,7 +56,8 @@ end
 
 db = SystemsDb.new(databaseFile.strip)
 
-resultsPerPage = 20
+#number of results to show on a page for systems and families results
+resultsPerPage = 30
 
 get '/add/system/?' do
    if session[:auth]
@@ -114,11 +120,11 @@ get '/systems/?' do
 end
 
 get '/systems/*' do |name|
-  @systemDetails = db.queryByName(SystemsDb::SYSTEM_TABLE, name) 
-  filterExpAndSub(@systemDetails)
-  if @systemDetails.count == 0
+   @systemDetails = db.queryByName(SystemsDb::SYSTEM_TABLE, name) 
+   filterExpAndSub(@systemDetails)
+   if @systemDetails.count == 0
      "Page Not Found"
-  else
+   else
      if @systemDetails[0]['ref'] == nil
          @systemDetails[0]['ref'] = @systemDetails[0]['familyref']   
      end
@@ -130,7 +136,7 @@ get '/systems/*' do |name|
      @fullRowValues =  rp.getBoolReplacements()
      @collapsibleBoxVals = rp.getCollapsibleBoxesData()
      haml :systemDetails
-  end
+   end
 end
 
 get '/families/?' do
@@ -149,66 +155,67 @@ get '/families/?' do
    end
 
 
-     haml :families
+   haml :families
 end
 
 get '/families/*' do |name|
-  family = db.queryByName(SystemsDb::FAMILY_TABLE, name)
-  if family.count == 0 
-     "Page Not Found"
-  else
-     @systemData = db.querySystemsByFamId(family[0]["id"])
-     familyDetails = db.queryByName(SystemsDb::FAMILY_TABLE, name) 
-     @pageTitle = familyDetails[0]['name']
-     @desc = familyDetails[0]['desc']
-     haml :familyDetails
-  end
+   family = db.queryByName(SystemsDb::FAMILY_TABLE, name)
+   if family.count == 0 
+      "Page Not Found"
+   else
+      @systemData = db.querySystemsByFamId(family[0]["id"])
+      familyDetails = db.queryByName(SystemsDb::FAMILY_TABLE, name) 
+      @pageTitle = familyDetails[0]['name']
+      @desc = familyDetails[0]['desc']
+      haml :familyDetails
+   end
 end
 
 get '/login' do
-  haml :login
+   haml :login
 end
 
 post '/login/openid' do
-  openid = params[:openid_identifier]
-  begin
-    oidreq = openid_consumer.begin(openid)
-    session[:auth] = true
-  rescue OpenID::DiscoveryFailure => why
-    "Sorry, we couldn't find your identifier #{openid}."
-  else
-    # You could request additional information here - see specs:
-    # http://openid.net/specs/openid-simple-registration-extension-1_0.html
-    # oidreq.add_extension_arg('sreg','required','nickname')
-    # oidreq.add_extension_arg('sreg','optional','fullname, email')
+   openid = params[:openid_identifier]
+   begin
+      oidreq = openid_consumer.begin(openid)
+   rescue OpenID::DiscoveryFailure => why
+      "Sorry, we couldn't find your identifier #{openid}."
+   else
+      # You could request additional information here - see specs:
+      # http://openid.net/specs/openid-simple-registration-extension-1_0.html
+      # oidreq.add_extension_arg('sreg','required','nickname')
+      # oidreq.add_extension_arg('sreg','optional','fullname, email')
 
-    # Send request - first parameter: Trusted Site,
-    # second parameter: redirect target
-    redirect oidreq.redirect_url(root_url, root_url + "/login/openid/complete")
-  end
+      # Send request - first parameter: Trusted Site,
+      # second parameter: redirect target
+      redirect oidreq.redirect_url(root_url, root_url + "/login/openid/complete")
+   end
 end
 
 get '/login/openid/complete' do
-  oidresp = openid_consumer.complete(params, request.url)
-  openid = oidresp.display_identifier
+   oidresp = openid_consumer.complete(params, request.url)
+   openid = oidresp.display_identifier
 
-  case oidresp.status
-    when OpenID::Consumer::FAILURE
+   case oidresp.status
+      when OpenID::Consumer::FAILURE
       "Sorry, we could not authenticate you with this identifier #{openid}."
 
-    when OpenID::Consumer::SETUP_NEEDED
+      when OpenID::Consumer::SETUP_NEEDED
       "Immediate request failed - Setup Needed"
 
-    when OpenID::Consumer::CANCEL
+      when OpenID::Consumer::CANCEL
       "Login cancelled."
 
-    when OpenID::Consumer::SUCCESS
+      when OpenID::Consumer::SUCCESS
       # Access additional informations:
       # puts params['openid.sreg.nickname']
       # puts params['openid.sreg.fullname']
+      #print
 
+      session[:auth] = true
       redirect "/add/system"
-  end
+   end
 end
 
 
