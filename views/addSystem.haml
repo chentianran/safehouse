@@ -12,8 +12,12 @@
          %legend Add System
          -fields = ['name', 'desc', 'familyname', 'eq_sym','ref','tdeg', 'mvol','emvol']
          -for field in fields
+               
             ="#{FieldTitles.titleOf(field)}"
-            %input{:type=>"text",:name=>field, :id=>field, :size=>"15"}
+            -if field == 'desc' or field == 'eq_sym' or field == 'ref'
+               %textarea{:name=>field, :id=>field, :size=>"15"}
+            -else
+               %input{:type=>"text",:name=>field, :id=>field, :size=>"15"}
             %BR
          %input{:type=>"submit",  :value=>"Submit"} 
 
