@@ -1,10 +1,18 @@
+%html{ :xmlns => "http://www.w3.org/1999/xhtml", :lang => "en", "xml:lang" => "en" }
+   %head
+      %title Add System
+      %meta{ "http-equiv" => "Content-Type", :content => "text/html; charset=utf-8"}
+      %link{"rel" => "stylesheet", "href" => "/css/styles.css", "type" => "text/css", "media"=>"screen"}   
+      %link{"rel"=>"stylesheet", "href"=>"http://fonts.googleapis.com/css?family=Playfair+Display", "type"=>"text/css"}
+    
+=partial :bar
 %body
    %form{:method=>"post", :action=>""}
       %fieldset
          %legend Add System
-         -fields = ['name', 'tdeg', 'mvol']
+         -fields = ['name', 'desc', 'familyname', 'eq_sym','ref','tdeg', 'mvol','emvol']
          -for field in fields
-            ="#{field}"
+            ="#{FieldTitles.titleOf(field)}"
             %input{:type=>"text",:name=>field, :id=>field, :size=>"15"}
             %BR
          %input{:type=>"submit",  :value=>"Submit"} 

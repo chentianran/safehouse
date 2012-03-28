@@ -12,7 +12,7 @@ class SystemViewParser
    @@descriptionFields = [ ['familydesc', 'Family Description' ],
                            ['desc', 'Description'] ]
    #Format for each field: [field, human readable title]
-   @@cornerTableFields = [  ['dim', 'Dimension'], 
+   @@cornerTableFields = [ ['dim', 'Dimension'], 
                            ['tdeg', 'Total Degree'], 
                            ['mvol', 'Mixed Volume'], 
                            ['emvol', 'Mixed Volume (ext.)'], 
@@ -26,7 +26,7 @@ class SystemViewParser
                            ['solns_r', 'Isolated real solutions'],
                            ['comp', 'Components of positive dimensions']]
 
-   @@boolFlagFields = [     ['posdim', 'Has positive dimensional components'],
+   @@boolFlagFields = [    ['posdim', 'Has positive dimensional components'],
                            ['open', 'Open problem'] ]
 
    def initialize(resultsHash)
