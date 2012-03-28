@@ -32,18 +32,6 @@ helpers do
          return urlStr
       end
    end
-
-   #used for openid    
-   def openid_consumer
-      @openid_consumer ||= OpenID::Consumer.new(session,
-       OpenID::Store::Filesystem.new("#{File.dirname(__FILE__)}/tmp/openid"))  
-   end
-
-   #used for openid
-   def root_url
-      request.url.match(/(^.*\/{2}[^\/]*)/)[1]
-   end
-
 end
 
 
@@ -58,31 +46,6 @@ db = SystemsDb.new(databaseFile.strip)
 
 #number of results to show on a page for systems and families results
 resultsPerPage = 30
-
-get '/add/system/?' do
-   if session[:auth]
-      haml :addSystem
-   else
-      redirect "/login"
-   end
-end
-
-post '/add/system/?' do
-   name = params[:name]
-   params.delete(:name)
-   begin
-      db.add(SystemsDb::SYSTEM_TABLE, name)
-   rescue
-      db.endTrans()
-   end
-   params.each do |field, value|
-      if value != ''
-         db.set(SystemsDb::SYSTEM_TABLE,name, field, value)
-      end
-   end
-   redirect "/systems/#{name}"
-end
-
 
 get '/search/?' do
    if params[:page] != nil
@@ -170,52 +133,4 @@ get '/families/*' do |name|
       haml :familyDetails
    end
 end
-
-get '/login' do
-   haml :login
-end
-
-post '/login/openid' do
-   openid = params[:openid_identifier]
-   begin
-      oidreq = openid_consumer.begin(openid)
-   rescue OpenID::DiscoveryFailure => why
-      "Sorry, we couldn't find your identifier #{openid}."
-   else
-      # You could request additional information here - see specs:
-      # http://openid.net/specs/openid-simple-registration-extension-1_0.html
-      # oidreq.add_extension_arg('sreg','required','nickname')
-      # oidreq.add_extension_arg('sreg','optional','fullname, email')
-
-      # Send request - first parameter: Trusted Site,
-      # second parameter: redirect target
-      redirect oidreq.redirect_url(root_url, root_url + "/login/openid/complete")
-   end
-end
-
-get '/login/openid/complete' do
-   oidresp = openid_consumer.complete(params, request.url)
-   openid = oidresp.display_identifier
-
-   case oidresp.status
-      when OpenID::Consumer::FAILURE
-      "Sorry, we could not authenticate you with this identifier #{openid}."
-
-      when OpenID::Consumer::SETUP_NEEDED
-      "Immediate request failed - Setup Needed"
-
-      when OpenID::Consumer::CANCEL
-      "Login cancelled."
-
-      when OpenID::Consumer::SUCCESS
-      # Access additional informations:
-      # puts params['openid.sreg.nickname']
-      # puts params['openid.sreg.fullname']
-      #print
-
-      session[:auth] = true
-      redirect "/add/system"
-   end
-end
-
 
