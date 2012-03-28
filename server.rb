@@ -2,6 +2,7 @@ require 'sinatra'
 require 'sqlite3'
 require 'haml'
 require 'systemsDb'
+require 'accountsDb'
 require 'resultParser'
 require 'systemViewParser'
 require 'filter'
@@ -55,6 +56,15 @@ if ARGV.count > 0
 end
 
 db = SystemsDb.new(databaseFile.strip)
+
+databaseFile = "accounts.db"
+if ARGV.count > 1
+   databaseFile = ARGV[1]
+   print ARGV[1]
+end
+
+accountsDb = AccountsDb.new("accounts.db")
+
 
 #number of results to show on a page for systems and families results
 resultsPerPage = 30
@@ -184,8 +194,8 @@ post '/login/openid' do
    else
       # You could request additional information here - see specs:
       # http://openid.net/specs/openid-simple-registration-extension-1_0.html
-      # oidreq.add_extension_arg('sreg','required','nickname')
-      # oidreq.add_extension_arg('sreg','optional','fullname, email')
+      oidreq.add_extension_arg('sreg','required','nickname')
+      oidreq.add_extension_arg('sreg','optional','fullname, email')
 
       # Send request - first parameter: Trusted Site,
       # second parameter: redirect target
@@ -210,11 +220,20 @@ get '/login/openid/complete' do
       when OpenID::Consumer::SUCCESS
       # Access additional informations:
       # puts params['openid.sreg.nickname']
-      # puts params['openid.sreg.fullname']
-      #print
+      
+      accountInfo = accountsDb.queryByOpenId(params['openid.identity'])
+      if accountInfo[0]['admin'] == 1
+         session[:auth] = true
+         redirect "/add/system"
+      else
+         session[:auth] = false
+         "You do not have admin access"
+      end
 
-      session[:auth] = true
-      redirect "/add/system"
+ #     str = ""
+ #     params.each do |row, val|
+ #        str += "#{row}= #{val}<BR>"
+ #     end
    end
 end
 
