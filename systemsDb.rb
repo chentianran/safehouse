@@ -43,6 +43,14 @@ class SystemsDb
    def initialize(filename)
       @db = SQLite3::Database.new(filename)
       @db.results_as_hash = true
+      begin
+         queryAll(SYSTEM_TABLE,1)   
+         queryAll(FAMILY_TABLE,1)
+      rescue => e
+         print e 
+         print "\n"
+         print "Invalid Table\n"
+      end
    end
 
    #builds a new database with a table for systems of equations and a table for

@@ -25,16 +25,29 @@ helpers do
 
 end
 
+def divRndUp(dividend, divisor)
+   return (dividend + divisor - 1) / divisor   
+end
+
 #initialize database
 databaseFile = "systems.db"
-if ARGV.count > 0
-   databaseFile = ARGV[0]
-   print ARGV[0]
+ARGV.each_with_index do |arg,i|
+   if arg == "-d" and (i+1) < arg.count 
+      databaseFile = ARGV[i+1]
+   end
 end
 
 db = SystemsDb.new(databaseFile.strip)
 
 resultsPerPage = 30 
+
+get '/test/?' do
+   haml :test
+end
+
+get '/about/?' do
+   "ABOUT"
+end
 
 get '/search/?' do
    if params[:page] != nil
@@ -50,7 +63,7 @@ get '/search/?' do
          "No Results Found"
       end
 
-      @pages = (db.countResults(params["s"])+ resultsPerPage-1) / resultsPerPage #round up
+      @pages = divRndUp(db.countResults(params["s"]), resultsPerPage) 
       @families = db.queryAll(SystemsDb::FAMILY_TABLE)
       haml :systems
    else
@@ -65,7 +78,7 @@ get '/systems/?' do
    else
       @page = 1
    end
-   @pages = (db.countRows(SystemsDb::SYSTEM_TABLE) + resultsPerPage-1) / resultsPerPage #round up
+   @pages = divRndUp(db.countRows(SystemsDb::SYSTEM_TABLE), resultsPerPage)
   @systemData = db.queryAll(SystemsDb::SYSTEM_TABLE, resultsPerPage,(@page - 1) * resultsPerPage)
   @families = db.queryAll(SystemsDb::FAMILY_TABLE,resultsPerPage)
   haml :systems
@@ -97,9 +110,9 @@ get '/families/?' do
    else
       @page = 1
    end
-   @pages = (db.countRows(SystemsDb::FAMILY_TABLE) + resultsPerPage-1) / resultsPerPage #round up
+   @pages = divRndUp(db.countRows(SystemsDb::FAMILY_TABLE), resultsPerPage)
 
-   @familyData= db.queryAll(SystemsDb::FAMILY_TABLE, resultsPerPage,(@page - 1) * resultsPerPage)
+   @familyData= db.queryAll(SystemsDb::FAMILY_TABLE, resultsPerPage, (@page - 1) * resultsPerPage)
 
   haml :families
 end
