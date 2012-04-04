@@ -50,7 +50,7 @@ get '/search/?' do
          "No Results Found"
       end
 
-      @pages = (db.search(params["s"]).length + resultsPerPage-1) / resultsPerPage #round up
+      @pages = (db.countResults(params["s"])+ resultsPerPage-1) / resultsPerPage #round up
       @families = db.queryAll(SystemsDb::FAMILY_TABLE)
       haml :systems
    else

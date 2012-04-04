@@ -247,6 +247,25 @@ class SystemsDb
       @db.commit()
       return count
    end
+
+   def countResults(searchTerm)
+      @db.transaction()
+      countArr = @db.execute(<<-SQL_STATEMENT)
+         SELECT COUNT(*) 
+         FROM #{SYSTEM_TABLE}
+         WHERE desc like '%#{searchTerm}%' 
+               OR name like '%#{searchTerm}%'
+         UNION ALL
+         SELECT COUNT(*)
+         FROM #{FAMILY_TABLE}
+         WHERE desc like '%#{searchTerm}%' 
+               OR name like '%#{searchTerm}%'
+      SQL_STATEMENT
+      count = countArr[0][0]
+      @db.commit()
+      return count
+   end
+
 end
 
 
