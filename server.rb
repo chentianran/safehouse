@@ -65,7 +65,7 @@ get '/systems/?' do
    else
       @page = 1
    end
-   @pages = (db.queryAll(SystemsDb::SYSTEM_TABLE).length + resultsPerPage-1) / resultsPerPage #round up
+   @pages = (db.countRows(SystemsDb::SYSTEM_TABLE) + resultsPerPage-1) / resultsPerPage #round up
   @systemData = db.queryAll(SystemsDb::SYSTEM_TABLE, resultsPerPage,(@page - 1) * resultsPerPage)
   @families = db.queryAll(SystemsDb::FAMILY_TABLE,resultsPerPage)
   haml :systems
@@ -97,7 +97,7 @@ get '/families/?' do
    else
       @page = 1
    end
-   @pages = (db.queryAll(SystemsDb::FAMILY_TABLE).length + resultsPerPage-1) / resultsPerPage #round up
+   @pages = (db.countRows(SystemsDb::FAMILY_TABLE) + resultsPerPage-1) / resultsPerPage #round up
 
    @familyData= db.queryAll(SystemsDb::FAMILY_TABLE, resultsPerPage,(@page - 1) * resultsPerPage)
 

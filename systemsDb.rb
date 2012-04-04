@@ -240,6 +240,13 @@ class SystemsDb
 
    end
 
+   def countRows(table)
+      @db.transaction()
+      countArr = @db.execute("SELECT COUNT(*) FROM #{table}")
+      count = countArr[0][0]
+      @db.commit()
+      return count
+   end
 end
 
 
