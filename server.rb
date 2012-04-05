@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'sinatra'
 require 'sqlite3'
 require 'haml'
@@ -5,6 +6,8 @@ require 'systemsDb'
 require 'resultParser'
 require 'systemViewParser'
 require 'filter'
+
+DATABASE_FILE = "/home/jonckheere/safehouse/systems.db"
 
 helpers do
    def partial( page, variables={} )
@@ -30,14 +33,8 @@ def divRndUp(dividend, divisor)
 end
 
 #initialize database
-databaseFile = "systems.db"
-ARGV.each_with_index do |arg,i|
-   if arg == "-d" and (i+1) < arg.count 
-      databaseFile = ARGV[i+1]
-   end
-end
 
-db = SystemsDb.new(databaseFile.strip)
+db = SystemsDb.new(DATABASE_FILE)
 
 resultsPerPage = 30 
 
@@ -79,9 +76,9 @@ get '/systems/?' do
       @page = 1
    end
    @pages = divRndUp(db.countRows(SystemsDb::SYSTEM_TABLE), resultsPerPage)
-  @systemData = db.queryAll(SystemsDb::SYSTEM_TABLE, resultsPerPage,(@page - 1) * resultsPerPage)
-  @families = db.queryAll(SystemsDb::FAMILY_TABLE,resultsPerPage)
-  haml :systems
+   @systemData = db.queryAll(SystemsDb::SYSTEM_TABLE, resultsPerPage,(@page - 1) * resultsPerPage)
+   @families = db.queryAll(SystemsDb::FAMILY_TABLE, resultsPerPage)
+   haml :systems
 end
 
 get '/systems/*' do |name|
