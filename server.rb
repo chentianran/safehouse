@@ -1,4 +1,5 @@
 programPath =""
+databaseFile = "/home/jonckheere/safehouse/systems.db"
 IO.foreach("/home/jonckheere/safehouse/serverConfig") do |line|
    if line.start_with?("DATABASE_FILE") 
       databaseFile = line.split("=")[1].strip!
@@ -8,16 +9,21 @@ IO.foreach("/home/jonckheere/safehouse/serverConfig") do |line|
    end
 end
 
+require "systemsDb"
+require "resultParser"
+require "systemViewParser"
+require "filter"
 
 require "rubygems"
 require 'sinatra'
 require 'sqlite3'
 require 'haml'
-require "#{programPath}/systemsDb"
-print "#{programPath}/systemsDb"
-require "#{programPath}/resultParser"
-require "#{programPath}/systemViewParser"
-require "#{programPath}/filter"
+#require "#{programPath}/systemsDb"
+#print "#{programPath}/systemsDb"
+#require "#{programPath}/resultParser"
+#require "#{programPath}/systemViewParser"
+#require "#{programPath}/filter"
+
 helpers do
    def partial( page, variables={} )
       haml page.to_sym, {layout=>false}, variables
