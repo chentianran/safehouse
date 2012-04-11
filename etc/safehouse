@@ -1,0 +1,4 @@
+#No spaces between words and =
+PROGRAM_PATH=/home/jonckheere/safehouse/
+PORT=8080
+DATABASE_FILE=/home/jonckheere/safehouse/systems.db

@@ -1,11 +1,12 @@
-programPath =""
-databaseFile = "/home/jonckheere/safehouse/systems.db"
-IO.foreach("/home/jonckheere/safehouse/serverConfig") do |line|
+dir = File.dirname(File.expand_path(__FILE__))
+Dir.chdir(dir)
+
+
+databaseFile = "systems.db"
+IO.foreach("/etc/safehouse") do |line|
+#IO.foreach("/home/jonckheere/safehouse/etc/safehouse") do |line|
    if line.start_with?("DATABASE_FILE") 
       databaseFile = line.split("=")[1].strip!
-   elsif line.start_with?("PROGRAM_PATH") 
-      programPath = line.split("=")[1].strip!
-      print programPath
    end
 end
 
@@ -105,7 +106,7 @@ get '/systems/*' do |name|
      if @systemDetails[0]['ref'] == nil
          @systemDetails[0]['ref'] = @systemDetails[0]['familyref']   
      end
-     rp =SystemViewParser.new(@systemDetails[0])
+     rp = SystemViewParser.new(@systemDetails[0])
      @pageTitle = rp.getTitle()
      @tableValues = rp.getCornerTableData()
      @desc = rp.getDescriptions()
@@ -123,10 +124,8 @@ get '/families/?' do
       @page = 1
    end
    @pages = divRndUp(db.countRows(SystemsDb::FAMILY_TABLE), resultsPerPage)
-
-   @familyData= db.queryAll(SystemsDb::FAMILY_TABLE, resultsPerPage, (@page - 1) * resultsPerPage)
-
-  haml :families
+   @familyData = db.queryAll(SystemsDb::FAMILY_TABLE, resultsPerPage, (@page - 1) * resultsPerPage)
+   haml :families
 end
 
 get '/families/*' do |name|
