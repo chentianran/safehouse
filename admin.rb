@@ -1,7 +1,10 @@
+#This file is the command line interface for interacting with the database
+
 require 'systemsDb'
 require 'optparse'
 require 'ostruct'
 
+#SystemsCli handles parsing the command line flags
 class SystemsCli
  
   :subcommand
@@ -57,12 +60,16 @@ class SystemsCli
    end
 end
 
+#parse the flags
+#this removes the parsed flags from argv, leaving the subcommand and arguments
 options = SystemsCli.parse(ARGV)
 db = SystemsDb.new(options.database)
+
+#default to operating on SYSTEM_TABLE 
 if options.family
    table = SystemsDb::FAMILY_TABLE
 else
-   table =  SystemsDb::SYSTEM_TABLE
+   table = SystemsDb::SYSTEM_TABLE
 end
 
 case ARGV[0]
@@ -90,12 +97,11 @@ when "delete"
    name = ARGV[1]
    db.deleteByName(table, name)
 
-when "replace"
+when "replacetext"
    column = ARGV[1]
    regex = ARGV[2]
    replacement = ARGV[3]
    db.replace(table,column, regex, replacement)
-
 
 when "addcolumn"
    name = ARGV[1]
@@ -105,6 +111,7 @@ when "addcolumn"
 when "set"
    name = ARGV[1]
    field,value = ARGV[2].split('=')
+   #ensure that the field is in the table
    if db.columns(table).include?(field.strip) or field == 'familyname'
       db.set(table, name, field, value)
    else

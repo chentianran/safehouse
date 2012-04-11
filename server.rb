@@ -1,14 +1,23 @@
-require 'rubygems'
+programPath =""
+IO.foreach("/home/jonckheere/safehouse/serverConfig") do |line|
+   if line.start_with?("DATABASE_FILE") 
+      databaseFile = line.split("=")[1].strip!
+   elsif line.start_with?("PROGRAM_PATH") 
+      programPath = line.split("=")[1].strip!
+      print programPath
+   end
+end
+
+
+require "rubygems"
 require 'sinatra'
 require 'sqlite3'
 require 'haml'
-require 'systemsDb'
-require 'resultParser'
-require 'systemViewParser'
-require 'filter'
-
-DATABASE_FILE = "/home/jonckheere/safehouse/systems.db"
-
+require "#{programPath}/systemsDb"
+print "#{programPath}/systemsDb"
+require "#{programPath}/resultParser"
+require "#{programPath}/systemViewParser"
+require "#{programPath}/filter"
 helpers do
    def partial( page, variables={} )
       haml page.to_sym, {layout=>false}, variables
@@ -34,7 +43,7 @@ end
 
 #initialize database
 
-db = SystemsDb.new(DATABASE_FILE)
+db = SystemsDb.new(databaseFile)
 
 resultsPerPage = 30 
 
