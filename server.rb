@@ -1,10 +1,10 @@
 dir = File.dirname(File.expand_path(__FILE__))
 Dir.chdir(dir)
 
-
+configFile ="/home/jonckheere/safehouse/etc/safehouse" 
+#configFile = "/etc/safehouse"
 databaseFile = "systems.db"
-IO.foreach("/etc/safehouse") do |line|
-#IO.foreach("/home/jonckheere/safehouse/etc/safehouse") do |line|
+IO.foreach(configFile) do |line|
    if line.start_with?("DATABASE_FILE") 
       databaseFile = line.split("=")[1].strip!
    end

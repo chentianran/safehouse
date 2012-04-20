@@ -36,9 +36,10 @@
                            %div.collapsibleDiv{:id=>title}
                               -if title == "Equations"
                                  %p.pre
-                                    -#="`#{body}`"
+                                    $$
                                     -body.lines do |line|
-                                       = "$$ #{line} $$"
+                                       = "\\\\ #{line} "
+                                    $$
                               -else
                                  %p.pre~ body
                         -#initialize all boxes to be closed initially

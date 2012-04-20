@@ -1,8 +1,10 @@
 #!/usr/bin/ruby
+
+configPath = "/home/jonckheere/etc/safehouse"
 programPath = ""
 port = 8080
 #IO.foreach("/home/jonckheere/safehouse/etc/safehouse") do |line|
-IO.foreach("/etc/safehouse") do |line|
+IO.foreach(configPath) do |line|
    if line.start_with?("PROGRAM_PATH") 
       programPath = line.split("=")[1].strip!
    elsif line.start_with?("PORT") 
