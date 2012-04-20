@@ -6,30 +6,30 @@ class SystemsDb
    FAMILY_TABLE = "families"  
 
    
-   SYSTEM_FIELDS =  <<-fieldStr
-                        name text PRIMARY KEY, 
-                        longname text, 
-                        tdeg integer, 
-                        mvol text, 
-                        emvol text,
-                        desc text, 
-                        family_id text, 
-                        eq_sym text, 
-                        eq_lee text, 
-                        eq_hps text,
-                        ref text, 
-                        soln_count_c integer, 
-                        soln_count_r integer, 
-                        
-                        soln_c integer, 
-                        soln_r integer, 
+   SYSTEM_FIELDS = <<-fieldStr
+                     name text PRIMARY KEY, 
+                     longname text, 
+                     tdeg integer, 
+                     mvol text, 
+                     emvol text,
+                     desc text, 
+                     family_id text, 
+                     eq_sym text, 
+                     eq_lee text, 
+                     eq_hps text,
+                     ref text, 
+                     soln_count_c integer, 
+                     soln_count_r integer, 
+                     
+                     soln_c integer, 
+                     soln_r integer, 
 
-                        comp integer,
-                        open integer,
+                     comp integer,
+                     open integer,
 
-                        posdim integer,
-                        dim integer
-                      fieldStr
+                     posdim integer,
+                     dim integer
+                   fieldStr
 
    FAMILY_FIELDS = <<-fieldStr
                      id integer PRIMARY KEY AUTOINCREMENT, 
@@ -114,7 +114,6 @@ class SystemsDb
       @db.commit()
       return rows
    end
-
    def queryFamilyById(famId)
       @db.transaction()
       rows = @db.execute("select * from #{FAMILY_TABLE} where family_id = '#{famId}'")
@@ -223,6 +222,23 @@ class SystemsDb
          end
 
       end
+   end
+
+
+   def queryByFirstLetter(table, letter, limit = -1, offset = 0 )
+      @db.transaction()
+      
+      rows =@db.execute(<<-SQL_STATEMENT)
+         SELECT #{table}.name, 
+                #{table}.desc
+         FROM #{table}
+         WHERE name like '#{letter}%'
+         LIMIT #{limit}
+         OFFSET #{offset}
+      SQL_STATEMENT
+      @db.commit()
+      return rows
+
    end
 
    def search(searchTerm, limit = -1, offset = 0 )
