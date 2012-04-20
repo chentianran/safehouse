@@ -1,15 +1,6 @@
 dir = File.dirname(File.expand_path(__FILE__))
 Dir.chdir(dir)
 
-#configFile ="/home/jonckheere/safehouse/etc/safehouse" 
-configFile = "/etc/safehouse"
-databaseFile = "systems.db"
-IO.foreach(configFile) do |line|
-   if line.start_with?("DATABASE_FILE") 
-      databaseFile = line.split("=")[1].strip!
-   end
-end
-
 require "systemsDb"
 require "resultParser"
 require "systemViewParser"
@@ -19,17 +10,31 @@ require "rubygems"
 require 'sinatra'
 require 'sqlite3'
 require 'haml'
-#require "#{programPath}/systemsDb"
-#print "#{programPath}/systemsDb"
-#require "#{programPath}/resultParser"
-#require "#{programPath}/systemViewParser"
-#require "#{programPath}/filter"
+
+#require 'fieldTitles'
+gem 'ruby-openid', '>=2.1.2'
+require 'openid'
+require 'openid/store/filesystem'
+
+
+enable :sessions
+
+configFile ="/home/jonckheere/safehouse/etc/safehouse" 
+#configFile = "/etc/safehouse"
+databaseFile = "systems.db"
+IO.foreach(configFile) do |line|
+   if line.start_with?("DATABASE_FILE") 
+      databaseFile = line.split("=")[1].strip!
+   end
+end
 
 helpers do
+   #render a partial haml page
    def partial( page, variables={} )
       haml page.to_sym, {layout=>false}, variables
    end
 
+   #change the page parameter in a url
    def setPageNum( urlStr, page)
       if urlStr.sub!(/page=\d*/, "page=#{page}") == nil 
          if urlStr.include? '?' 
@@ -41,26 +46,16 @@ helpers do
          return urlStr
       end
    end
-
 end
 
 def divRndUp(dividend, divisor)
    return (dividend + divisor - 1) / divisor   
 end
 
-#initialize database
-
 db = SystemsDb.new(databaseFile)
 
-resultsPerPage = 30 
-
-get '/test/?' do
-   haml :test
-end
-
-get '/about/?' do
-   "ABOUT"
-end
+#number of results to show on a page for systems and families results
+resultsPerPage = 30
 
 get '/search/?' do
    if params[:page] != nil
@@ -98,11 +93,11 @@ get '/systems/?' do
 end
 
 get '/systems/*' do |name|
-  @systemDetails = db.queryByName(SystemsDb::SYSTEM_TABLE, name) 
-  filterExpAndSub(@systemDetails)
-  if @systemDetails.count == 0
+   @systemDetails = db.queryByName(SystemsDb::SYSTEM_TABLE, name) 
+   filterExpAndSub(@systemDetails)
+   if @systemDetails.count == 0
      "Page Not Found"
-  else
+   else
      if @systemDetails[0]['ref'] == nil
          @systemDetails[0]['ref'] = @systemDetails[0]['familyref']   
      end
@@ -114,7 +109,7 @@ get '/systems/*' do |name|
      @fullRowValues =  rp.getBoolReplacements()
      @collapsibleBoxVals = rp.getCollapsibleBoxesData()
      haml :systemDetails
-  end
+   end
 end
 
 get '/families/?' do
@@ -123,21 +118,27 @@ get '/families/?' do
    else
       @page = 1
    end
-   @pages = divRndUp(db.countRows(SystemsDb::FAMILY_TABLE), resultsPerPage)
-   @familyData = db.queryAll(SystemsDb::FAMILY_TABLE, resultsPerPage, (@page - 1) * resultsPerPage)
+   if params[:firstletter] != nil
+      firstLetter = params[:firstletter]
+      @pages = divRndUp(db.queryByFirstLetter(SystemsDb::FAMILY_TABLE, firstLetter).length,  resultsPerPage) #round up
+      @familyData = db.queryByFirstLetter(SystemsDb::FAMILY_TABLE, firstLetter, resultsPerPage,(@page - 1) * resultsPerPage)
+   else
+      @pages = divRndUp(db.queryAll(SystemsDb::FAMILY_TABLE).length, resultsPerPage) #round up
+      @familyData= db.queryAll(SystemsDb::FAMILY_TABLE, resultsPerPage,(@page - 1) * resultsPerPage)
+   end
    haml :families
 end
 
 get '/families/*' do |name|
-  family = db.queryByName(SystemsDb::FAMILY_TABLE, name)
-  if family.count == 0 
-     "Page Not Found"
-  else
-     @systemData = db.querySystemsByFamId(family[0]["id"])
-     familyDetails = db.queryByName(SystemsDb::FAMILY_TABLE, name) 
-     @pageTitle = familyDetails[0]['name']
-     @desc = familyDetails[0]['desc']
-     haml :familyDetails
-  end
+   family = db.queryByName(SystemsDb::FAMILY_TABLE, name)
+   if family.count == 0 
+      "Page Not Found"
+   else
+      @systemData = db.querySystemsByFamId(family[0]["id"])
+      familyDetails = db.queryByName(SystemsDb::FAMILY_TABLE, name) 
+      @pageTitle = familyDetails[0]['name']
+      @desc = familyDetails[0]['desc']
+      haml :familyDetails
+   end
 end
 
