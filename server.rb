@@ -1,8 +1,8 @@
 dir = File.dirname(File.expand_path(__FILE__))
 Dir.chdir(dir)
 
-configFile ="/home/jonckheere/safehouse/etc/safehouse" 
-#configFile = "/etc/safehouse"
+#configFile ="/home/jonckheere/safehouse/etc/safehouse" 
+configFile = "/etc/safehouse"
 databaseFile = "systems.db"
 IO.foreach(configFile) do |line|
    if line.start_with?("DATABASE_FILE") 

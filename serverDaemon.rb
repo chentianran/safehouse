@@ -1,6 +1,8 @@
 #!/usr/bin/ruby
 
-configPath = "/home/jonckheere/etc/safehouse"
+#configPath = "/home/jonckheere/safehouse/etc/safehouse"
+configPath = "/etc/safehouse"
+
 programPath = ""
 port = 8080
 #IO.foreach("/home/jonckheere/safehouse/etc/safehouse") do |line|
